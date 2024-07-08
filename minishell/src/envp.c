@@ -3,7 +3,7 @@
 #include "../printf/includes/ft_printf.h"
 #include "../printf/libft/libft.h"
 
-void    init_envp(t_minish mini, char *envp[])
+void    init_envp(t_minish *mini, char *envp[])
 {
     char **paths;
     int i;
@@ -15,6 +15,6 @@ void    init_envp(t_minish mini, char *envp[])
 			paths = ft_split(envp[i] + 5, ':');
 		i++;
 	}
-    mini.envp = paths;
+    mini->envp = paths;
     return;
 }

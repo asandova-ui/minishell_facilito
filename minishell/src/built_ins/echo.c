@@ -1,7 +1,9 @@
 
-#include "../../includes/minishell.h"
+/*#include "../../includes/minishell.h"
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
+
+//ESTO NO FUNCIONA
 
 static	int		nb_args(char **args)
 {
@@ -38,4 +40,4 @@ int				ft_echo(char **args)
 	if (n_option == 0)
 		write(1, "\n", 1);
 	return (0);
-}
+}*/

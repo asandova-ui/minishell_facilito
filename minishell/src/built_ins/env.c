@@ -8,7 +8,7 @@ int		ft_env(char **paths)
     int i;
 
     i = 0;
-	while (paths[i] != '\0')
+	while (paths[i] != NULL)
 	{
 		ft_putendl_fd(paths[i], 1);
 		i++;

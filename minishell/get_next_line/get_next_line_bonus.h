@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/27 11:44:28 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/08 15:53:45 by asandova         ###   ########.fr       */
+/*   Created: 2023/10/04 10:50:16 by marvin            #+#    #+#             */
+/*   Updated: 2023/10/04 10:50:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 32
+# endif
+
+# ifndef MAX_FD
+#  define MAX_FD 23
 # endif
 
 # include <fcntl.h>
@@ -36,9 +40,9 @@ char		*line_getting(t_fd_storage *fd_storage);
 char		*base_file_reading(int fd, t_fd_storage *fd_storage);
 char		*get_next_line(int fd);
 
-char		*ft_strjoin2(char *s1, char *s2);
-size_t		ft_strlen2(char *str);
-char		*ft_substr2(char *str, unsigned int start, size_t len);
-char		*ft_strchr2(char *str, int c);
-char		*ft_strdup2(char *str);
+char		*ft_strjoin(char *s1, char *s2);
+size_t		ft_strlen(char *str);
+char		*ft_substr(char *str, unsigned int start, size_t len);
+char		*ft_strchr(char *str, int c);
+char		*ft_strdup(char *str);
 #endif

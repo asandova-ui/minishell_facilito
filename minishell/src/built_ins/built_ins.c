@@ -2,13 +2,14 @@
 #include "../../includes/minishell.h"
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
-void	built_ins(char *line, t_minish	mini)
+void	built_ins(char *line, t_minish	*mini)
 {
     int i;
     char *str;
 
+	str = NULL;
     i = 0;
-    while (line != 32)
+    while (line[i] != 32)
     {
         str[i] = line[i];
         i++;
@@ -27,8 +28,8 @@ void	built_ins(char *line, t_minish	mini)
 	if (ft_strcmp(str, "unset") == 0)
 	{
 	}
-	if (ft_strcmp(str, "env") == 0)
-		ft_env(mini.envp);
+	if (ft_strcmp(str, "env") == 0) //DEBERIA FUNCIONAR
+		ft_env(mini->envp);
 	if (ft_strcmp(str, "exit") == 0)
 		exit_command();
 }

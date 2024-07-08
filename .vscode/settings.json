@@ -6,6 +6,7 @@
         "minishell.h": "c",
         "type_traits": "c",
         "ft_printf.h": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "wait.h": "c"
     }
 }
