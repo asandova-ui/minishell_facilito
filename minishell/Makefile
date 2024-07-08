@@ -53,7 +53,7 @@ endef
 
 clean:
 	@echo "$(RED)Cleaning object files...$(RESET)"
-	@make -C $(LIBFTPRINTF_PATH) clean > 
+	@make -C $(LIBFTPRINTF_PATH) clean > 1
 	@$(RM) $(OBJS)
 	@echo "$(GREEN)Cleaned successfully!$(RESET)"
 

@@ -57,3 +57,45 @@ char	*ft_strjoin2(char *line, char *buff)
 	free(line);
 	return (str);
 }
+
+char	*ft_substr2(char *s, unsigned int start, size_t len)
+{
+	char	*str;
+	size_t	i;
+	size_t	s_len;
+
+	s_len = ft_strlen2(s);
+	i = 0;
+	if (!s)
+		return (0);
+	if (start >= s_len)
+		return (ft_strdup2(""));
+	if (len > s_len - start)
+		len = s_len - start;
+	str = (char *)malloc(sizeof(char) * (len + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (i < len && s[start + i])
+	{
+		str[i] = s[start + i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
+}
+
+char	*ft_strdup2(char *s1)
+{
+	char	*str;
+	int		i;
+
+	str = (char *)malloc(sizeof(char) * (ft_strlen2(s1) + 1));
+	if (!str)
+		return (NULL);
+	i = -1;
+	while (s1[++i])
+		str[i] = s1[i];
+	str[i] = '\0';
+	return (str);
+}

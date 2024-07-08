@@ -5,38 +5,40 @@
 
 int main(int argc, char **argv, char **envp)
 {
-    t_minish	mini;
-	char		*line;
+    t_minish mini;
+    char *line = NULL;
 
     (void)argc;
     (void)argv;
-    init_struct (&mini);
+    init_struct(&mini, envp);
     if (envp == NULL)
         mini.env_exist = 1;
-    else if (envp != NULL)
-        init_envp(&mini, envp);//en mini.envp ya estan los paths
-    while (mini.exit != 0)
+    else
+        init_envp(&mini, envp); // initialize mini.envp with envp
+    while (mini.exit == 0)
     {
-        minishell(line = get_next_line(STDIN), &mini);
+        line = get_next_line(STDIN_FILENO);
+        if (line == NULL)
+            break; // Handle EOF or error in get_next_line
+        minishell(line, &mini);
+        free(line);
     }
     exit(EXIT_SUCCESS);
-    return(0);
 }
 
-void init_struct(t_minish *mini)
+void init_struct(t_minish *mini, char **envp)
 {
-    mini->in = dup(STDIN);
-	mini->out = dup(STDOUT);
+    mini->in = dup(STDIN_FILENO);
+    mini->out = dup(STDOUT_FILENO);
     mini->exit = 0;
     mini->ret_value = 0;
-}
-void minishell(char *line, t_minish	*mini)
-{
-	built_ins(line, mini);
+    mini->envp = NULL;
+    mini->env_exist = 0;
+    mini->envp = envp;
 }
 
-/*int i = 0;
-    while (envp[i] != NULL)
-    {
-        printf("%s", envp[i]);
-    }*/
+void minishell(char *line, t_minish *mini)
+{
+    built_ins(line, mini);//solo builtins
+    //ahora los comandos requeridos
+}

@@ -6,7 +6,7 @@
 /*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 11:43:54 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/08 15:56:15 by asandova         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:03:09 by asandova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*line_keep(t_fd_storage *fd_storage)
 	if (!fd_storage->storage[lo])
 		return (remix_free(&fd_storage->storage));
 	fd_storage->length = ft_strlen2(fd_storage->storage);
-	temp_st = ft_substr(fd_storage->storage, lo, fd_storage->length - lo);
+	temp_st = ft_substr2(fd_storage->storage, lo, fd_storage->length - lo);
 	remix_free(&fd_storage->storage);
 	if (!temp_st)
 		return (NULL);
@@ -54,7 +54,7 @@ char	*line_getting(t_fd_storage *fd_storage)
 		lo = (int)ft_strlen2(fd_storage->storage);
 	else
 		lo = sto - fd_storage->storage + 1;
-	returning_line = ft_substr(fd_storage->storage, 0, lo);
+	returning_line = ft_substr2(fd_storage->storage, 0, lo);
 	if (!returning_line)
 		return (NULL);
 	return (returning_line);

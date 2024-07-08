@@ -6,7 +6,7 @@
 /*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/07/08 15:43:18 by asandova         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:43:08 by asandova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 
 typedef struct s_minish
 {
+    char **path;
     char **envp;
     char **av;
     int in;
@@ -48,7 +49,7 @@ typedef struct	s_token
 }				t_token;
 
 void            init_envp(t_minish *mini, char *envp[]);
-void            init_struct(t_minish *mini);
+void            init_struct(t_minish *mini, char **envp);
 void            minishell(char *line, t_minish	*mini);
 void	        built_ins(char *line, t_minish	*mini);
 int             ft_strcmp(const char *str1, const char *str2);

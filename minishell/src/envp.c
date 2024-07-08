@@ -15,6 +15,6 @@ void    init_envp(t_minish *mini, char *envp[])
 			paths = ft_split(envp[i] + 5, ':');
 		i++;
 	}
-    mini->envp = paths;
+    mini->path = paths;
     return;
 }
