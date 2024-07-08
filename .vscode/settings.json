@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "unistd.h": "c",
+        "cstdlib": "c",
+        "get_next_line.h": "c",
+        "minishell.h": "c",
+        "type_traits": "c",
+        "ft_printf.h": "c",
+        "libft.h": "c"
+    }
+}

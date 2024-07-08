@@ -1,19 +1,20 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   envp.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/08 09:50:58 by asandova          #+#    #+#             */
-/*   Updated: 2024/07/08 10:34:32 by asandova         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include "../printf/includes/ft_printf.h"
+#include "../printf/libft/libft.h"
 
-void    init_envp(t_minish mini, char **envp)
+void    init_envp(t_minish mini, char *envp[])
 {
+    char **paths;
+    int i;
 
+    i = 0;
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], "PATH=", 5))
+			paths = ft_split(envp[i] + 5, ':');
+		i++;
+	}
+    mini.envp = paths;
     return;
 }
