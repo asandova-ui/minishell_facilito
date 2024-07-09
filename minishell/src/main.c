@@ -32,7 +32,11 @@ int main(int argc, char **argv, char **envp)
 
 void minishell(char *line, t_minish *mini)
 {
-    parse_line(line, mini);
+    parse_line(line, mini);//vemos que esten cerradas las llaves y comprobamos caracteres especiales: \ $ < >>
+    //depurar:
+    //printf("%s", line);
+
+    //ahora ya podemos proceder con una linea algo más limpia:
     built_ins(line, mini);//solo builtins
     //ahora los comandos requeridos
 }

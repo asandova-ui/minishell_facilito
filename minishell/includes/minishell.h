@@ -29,6 +29,8 @@
 # define STDOUT 1
 # define STDERR 2
 
+# define MAX_INT 2147483647
+
 typedef struct s_minish
 {
     char **path;
@@ -59,5 +61,7 @@ int		        ft_env(char **paths);
 int		        ft_pwd(void);
 void            print_line(t_minish *mini);
 void            parse_line(char *line, t_minish *mini);
+int             quotes(char *line, int index);
+int		        is_important_sep(char *line, int i);
 
 #endif
