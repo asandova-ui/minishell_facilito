@@ -41,6 +41,7 @@ typedef struct s_minish
     int exit;
     int ret_value;
     int env_exist;
+	int comillas;
 }   t_minish;
 
 typedef struct	s_token
@@ -63,5 +64,6 @@ void            print_line(t_minish *mini);
 void            parse_line(char *line, t_minish *mini);
 int             quotes(char *line, int index);
 int		        is_important_sep(char *line, int i);
+void			ft_echo(char *line);
 
 #endif

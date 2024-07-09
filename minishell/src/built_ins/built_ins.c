@@ -4,36 +4,38 @@
 #include "../../printf/libft/libft.h"
 void built_ins(char *line, t_minish *mini)
 {
-    char *str = strtok(line, " \n");
-    
-    if (str == NULL)
+    char *command = strtok(line, " \n");
+
+    if (command == NULL)
         return;
 
-    else if (ft_strcmp(str, "echo") == 0)
+    if (ft_strcmp(command, "echo") == 0)
     {
-        // Implement echo functionality
+        char *args = strtok(NULL, "\n");
+        if (args != NULL && mini->comillas != 1)
+            ft_echo(args);
     }
-    else if (ft_strcmp(str, "cd") == 0)
+    else if (ft_strcmp(command, "cd") == 0)
     {
         // Implement cd functionality
     }
-    else if (ft_strcmp(str, "pwd") == 0)
+    else if (ft_strcmp(command, "pwd") == 0)
     {
         ft_pwd();
     }
-    else if (ft_strcmp(str, "export") == 0)
+    else if (ft_strcmp(command, "export") == 0)
     {
         // Implement export functionality
     }
-    else if (ft_strcmp(str, "unset") == 0)
+    else if (ft_strcmp(command, "unset") == 0)
     {
         // Implement unset functionality
     }
-    else if (ft_strcmp(str, "env") == 0)
+    else if (ft_strcmp(command, "env") == 0)
     {
         ft_env(mini->envp);
     }
-    else if (ft_strcmp(str, "exit") == 0)
+    else if (ft_strcmp(command, "exit") == 0)
     {
 		mini->exit = 1;
         //exit_command();

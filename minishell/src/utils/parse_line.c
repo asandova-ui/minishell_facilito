@@ -72,8 +72,10 @@ int quote_check(char *line, t_minish *mini)
     {
         ft_putendl_fd("minishell: syntax error with open quotes", STDERR);
 		mini->ret_value = 2;
+		mini->comillas = 1;
 		return (1);
     }
+	mini->comillas = 0;
     return (0);
 }
 

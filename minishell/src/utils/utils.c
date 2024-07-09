@@ -4,7 +4,7 @@
 
 void print_line(t_minish *mini)
 {
-    ft_putstr_fd("\033[2K\r", STDERR);
+    //eliminada la primera linea (borraba cositas del terminal)
     if (mini->ret_value == 0)
         ft_putstr_fd("\033[0;32m→ ", STDERR);
     else if (mini->ret_value != 0)

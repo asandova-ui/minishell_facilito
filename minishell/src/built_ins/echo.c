@@ -1,43 +1,35 @@
 
-/*#include "../../includes/minishell.h"
+#include "../../includes/minishell.h"
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
 
-//ESTO NO FUNCIONA
+//La idea seria pasarle un struct con todas las variables almacenadas que se hayan declarado con $ y que si las reconoce que
+//las imprima. En cuanto este hecho export lo incluyo
 
-static	int		nb_args(char **args)
-{
-	int		size;
+void ft_echo(char *line) {
+    char *arg;
+    int new_line = 1;
+    char *start, *end;
 
-	size = 0;
-	while (args[size])
-		size++;
-	return (size);
-}
-
-int				ft_echo(char **args)
-{
-	int		i;
-	int		n_option;
-
-	i = 1;
-	n_option = 0;
-	if (nb_args(args) > 1)
+    arg = strtok(line, " \n");
+    if (arg != NULL && ft_strcmp(arg, "-n") == 0)
 	{
-		while (args[i] && ft_strcmp(args[i], "-n") == 0)
-		{
-			n_option = 1;
-			i++;
-		}
-		while (args[i])
-		{
-			ft_putstr_fd(args[i], 1);
-			if (args[i + 1] && args[i][0] != '\0')
-				write(1, " ", 1);
-			i++;
-		}
-	}
-	if (n_option == 0)
-		write(1, "\n", 1);
-	return (0);
-}*/
+        new_line = 0;
+        arg = strtok(NULL, " \n");
+    }
+    while (arg != NULL)
+	{
+        start = (arg[0] == '"') ? arg + 1 : arg;
+        end = (arg[ft_strlen(arg) - 1] == '"') ? (arg + ft_strlen(arg) - 1) : NULL;
+
+        if (end != NULL)
+            write(1, start, end - start);
+        else
+            write(1, start, ft_strlen(start));
+        arg = strtok(NULL, " \n");
+        if (arg != NULL)
+            write(1, " ", 1);
+    }
+    if (new_line)
+        write(1, "\n", 1);
+}
