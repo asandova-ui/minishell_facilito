@@ -3,6 +3,9 @@
 #include "../printf/includes/ft_printf.h"
 #include "../printf/libft/libft.h"
 
+#include <unistd.h>
+#include <stdio.h>
+
 int main(int argc, char **argv, char **envp)
 {
     t_minish mini;
@@ -17,6 +20,7 @@ int main(int argc, char **argv, char **envp)
         init_envp(&mini, envp); // initialize mini.envp with envp
     while (mini.exit == 0)
     {
+        print_line(&mini);
         line = get_next_line(STDIN_FILENO);
         if (line == NULL)
             break; // Handle EOF or error in get_next_line
@@ -24,6 +28,13 @@ int main(int argc, char **argv, char **envp)
         free(line);
     }
     exit(EXIT_SUCCESS);
+}
+
+void minishell(char *line, t_minish *mini)
+{
+    parse_line(line, mini);
+    built_ins(line, mini);//solo builtins
+    //ahora los comandos requeridos
 }
 
 void init_struct(t_minish *mini, char **envp)
@@ -35,10 +46,4 @@ void init_struct(t_minish *mini, char **envp)
     mini->envp = NULL;
     mini->env_exist = 0;
     mini->envp = envp;
-}
-
-void minishell(char *line, t_minish *mini)
-{
-    built_ins(line, mini);//solo builtins
-    //ahora los comandos requeridos
 }

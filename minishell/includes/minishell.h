@@ -27,6 +27,7 @@
 
 # define STDIN 0
 # define STDOUT 1
+# define STDERR 2
 
 typedef struct s_minish
 {
@@ -56,6 +57,7 @@ int             ft_strcmp(const char *str1, const char *str2);
 void	        exit_command(void);
 int		        ft_env(char **paths);
 int		        ft_pwd(void);
-
+void            print_line(t_minish *mini);
+void            parse_line(char *line, t_minish *mini);
 
 #endif

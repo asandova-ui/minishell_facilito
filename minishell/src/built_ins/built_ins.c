@@ -49,8 +49,3 @@ int ft_strcmp(const char *str1, const char *str2)
     }
     return (*(unsigned char *)str1 - *(unsigned char *)str2);
 }
-
-/*void	exit_command(void)
-{
-	exit(EXIT_SUCCESS);
-}*/
