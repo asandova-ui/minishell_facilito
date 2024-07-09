@@ -85,10 +85,10 @@ void parse_line(char *line, t_minish *mini)
     //depurar:
     //printf("%s\n", line);
 
-    /*if (line && line[0] == '$')//si tenemos dolar por ejemplo $PATH lo convertimos de ASCII 36 a -36 para indicar que es "especial" y que hay que tratarlo de manera diferente
-		line[0] = (char)(-line[0]);*/
+    if (line && line[0] == '$')//si tenemos dolar por ejemplo $PATH lo convertimos de ASCII 36 a -36 para indicar que es "especial" y que hay que tratarlo de manera diferente
+		line[0] = (char)(-line[0]);
     //depurar:
-    //printf("%s\n", line)
-    
+    //printf("%s\n", line);
+
     return ;
 }
