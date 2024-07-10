@@ -79,10 +79,10 @@ int quote_check(char *line, t_minish *mini)
     return (0);
 }
 
-void parse_line(char *line, t_minish *mini)
+char *parse_line(char *line, t_minish *mini)
 {
     if (quote_check(line,mini))
-        return ;
+        return (NULL);
     line = space_line(line);//para tener en cuenta los caracteres especiales depende de si estamos dentro de comillas o no
     //depurar:
     //printf("%s\n", line);
@@ -92,5 +92,5 @@ void parse_line(char *line, t_minish *mini)
     //depurar:
     //printf("%s\n", line);
 
-    return ;
+    return (line);
 }

@@ -31,10 +31,18 @@
 
 # define MAX_INT 2147483647
 
+#define BUFF_SIZE 256
+
+typedef struct	s_env
+{
+	char			*value;
+	struct s_env	*next;
+}				t_env;
+
 typedef struct s_minish
 {
+    t_env *env;
     char **path;
-    char **envp;
     char **av;
     int in;
     int out;
@@ -52,18 +60,19 @@ typedef struct	s_token
 	struct s_token	*next;
 }				t_token;
 
-void            init_envp(t_minish *mini, char *envp[]);
-void            init_struct(t_minish *mini, char **envp);
+void            init_path(t_minish *mini, char *envp[]);
+void            init_struct(t_minish *mini);
 void            minishell(char *line, t_minish	*mini);
 void	        built_ins(char *line, t_minish	*mini);
 int             ft_strcmp(const char *str1, const char *str2);
 void	        exit_command(void);
-int		        ft_env(char **paths);
+int		        ft_env(t_env *env);
 int		        ft_pwd(void);
 void            print_line(t_minish *mini);
-void            parse_line(char *line, t_minish *mini);
+char            *parse_line(char *line, t_minish *mini);
 int             quotes(char *line, int index);
 int		        is_important_sep(char *line, int i);
 void			ft_echo(char *line);
+int            ft_export(char *line, t_minish *mini);
 
 #endif

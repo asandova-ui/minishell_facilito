@@ -3,7 +3,7 @@
 #include "../printf/includes/ft_printf.h"
 #include "../printf/libft/libft.h"
 
-void    init_envp(t_minish *mini, char *envp[])
+void    init_path(t_minish *mini, char *envp[])
 {
     char **paths;
     int i;

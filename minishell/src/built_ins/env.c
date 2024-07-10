@@ -3,15 +3,14 @@
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
 
-int		ft_env(char **paths)
+int		ft_env(t_env *env)
 {
-    int i;
-
-    i = 0;
-	while (paths[i] != NULL)
+	while (env && env->next != NULL)
 	{
-		ft_putendl_fd(paths[i], 1);
-		i++;
+		ft_putendl_fd(env->value, 1);
+		env = env->next;
 	}
+	if (env)
+		ft_putendl_fd(env->value, 1);
 	return (0);
 }
