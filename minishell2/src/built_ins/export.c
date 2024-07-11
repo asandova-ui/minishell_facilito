@@ -5,48 +5,33 @@
 
 void	ft_export(char *args, t_minish *mini)
 {
+	char	*arg;
+	char	*equal_sign;
 	char	*name;
 	char	*value;
-	char	*equal_sign;
-	char	*env_val;
-	int		i;
-	int		name_len;
 
-	if (args == NULL)
+	if (args == NULL || *args == '\0')
 	{
 		print_sorted_envp(mini);
 		return ;
 	}
-	equal_sign = ft_strchr(args, '=');
-	if (equal_sign != NULL)
+	arg = strtok(args, " \n");
+	while (arg != NULL)
 	{
-		// Dividir la cadena en nombre y valor
-		*equal_sign = '\0';
-		name = args;
-		value = equal_sign + 1;
-		// Agregar o actualizar la variable de entorno
-		add_or_update_env_var(mini, name, value);
-	}
-	else
-	{
-		// Solo imprimir el valor de la variable de entorno
-		env_val = NULL;
-		i = 0;
-		name_len = ft_strlen(args);
-		while (mini->envp && mini->envp[i])
+		equal_sign = strchr(arg, '=');
+		if (equal_sign != NULL)
 		{
-			if (ft_strncmp(mini->envp[i], args, name_len) == 0
-				&& mini->envp[i][name_len] == '=')
-			{
-				env_val = mini->envp[i];
-				break ;
-			}
-			i++;
+			*equal_sign = '\0';
+			name = arg;
+			value = equal_sign + 1;
+			if (is_valid_env(name))
+				add_or_update_env_var(mini, name, value);
+			else
+				fprintf(stderr, "export: %s: not a valid identifier\n", name);
 		}
-		if (env_val != NULL)
-			printf("%s\n", env_val);
 		else
-			printf("Variable de entorno %s no establecida\n", args);
+			fprintf(stderr, "export: %s: not a valid identifier\n", arg);
+		arg = strtok(NULL, " \n");
 	}
 }
 
@@ -138,7 +123,7 @@ void	print_sorted_envp(t_minish *mini)
 	i = 0;
 	while (i < env_count)
 	{
-		printf("%s\n", sorted_envp[i]);
+		printf("declare -x %s\n", sorted_envp[i]);
 		i++;
 	}
 	free(sorted_envp);

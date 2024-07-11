@@ -61,7 +61,11 @@ void	built_ins(char *line, t_minish *mini)
 	if (ft_strcmp(command, "env") == 0)
 		ft_env(mini);
 	if (ft_strcmp(command, "exit") == 0)
-		mini->exit = 1;
+	{
+		args = strtok(NULL, "\n");
+		if (args != NULL)
+			ft_exit(args);
+	}
 }
 
 int	ft_strcmp(const char *str1, const char *str2)
