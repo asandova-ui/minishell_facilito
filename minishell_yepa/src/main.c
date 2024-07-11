@@ -18,7 +18,8 @@ int main(int argc, char **argv, char **envp)
     {
         init_path(&mini);
         sig_init();
-        signal(SIGINT, sig_int);
+        signal(SIGINT, &sig_int);
+        signal(SIGQUIT, &sig_quit);
         print_line(&mini);
         line = get_next_line(STDIN_FILENO);
         if (line == NULL)

@@ -6,7 +6,7 @@
 /*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/07/11 14:50:02 by asandova         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:06:34 by asandova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,5 @@ char				*ft_strndup(const char *s, size_t n);
 char				*ft_strncpy(char *dest, const char *src, size_t n);
 char				*get_env_value(const char *name);
 int	is_valid_number(const char *str);
+void	sig_quit(int code);
 #endif
