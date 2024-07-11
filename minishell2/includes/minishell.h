@@ -3,27 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/07/08 16:43:08 by asandova         ###   ########.fr       */
+/*   Updated: 2024/07/11 08:24:07 by jamorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <string.h>
-# include <fcntl.h>
-# include <dirent.h>
-# include <sys/wait.h>
-# include <linux/limits.h>
-# include <errno.h>
-# include <signal.h>
 # include "../get_next_line/get_next_line.h"
+# include <dirent.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <linux/limits.h>
+# include <signal.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/wait.h>
+# include <unistd.h>
 
 # define STDIN 0
 # define STDOUT 1
@@ -33,44 +33,50 @@
 
 typedef struct s_minish
 {
-    char **path;
-    char **envp;
-    char **av;
-    int in;
-    int out;
-    int exit;
-    int ret_value;
-    int env_exist;
-	int comillas;
-}   t_minish;
+	char			**path;
+	char			**envp;
+	char			**av;
+	int				in;
+	int				out;
+	int				exit;
+	int				ret_value;
+	int				env_exist;
+	int				comillas;
+}					t_minish;
 
-typedef struct	s_token
+typedef struct s_token
 {
 	char			*str;
 	int				type;
 	struct s_token	*prev;
 	struct s_token	*next;
-}				t_token;
+}					t_token;
 
-void            init_envp(t_minish *mini, char *envp[]);
-void            init_struct(t_minish *mini, char **envp);
-void            minishell(char *line, t_minish	*mini);
-void	        built_ins(char *line, t_minish	*mini);
-int             ft_strcmp(const char *str1, const char *str2);
-void	        exit_command(void);
-void            ft_env(t_minish *mini);
-int		        ft_pwd(void);
-void            print_line(t_minish *mini);
-void            parse_line(char *line, t_minish *mini);
-int             quotes(char *line, int index);
-int		        is_important_sep(char *line, int i);
-void			ft_echo(char *line);
-void            ft_export(char *args, t_minish *mini);
-void			free_envp(char **envp); 
-char            **dup_envp(char **envp);
-void            ft_unset(char *name, t_minish *mini);
-void            remove_env_var(t_minish *mini, const char *name);
-void            add_or_update_env_var(t_minish *mini, const char *name, const char *value);
-int             is_valid_env(const char *env);
-int             print_error(int error, const char *arg);
+void				init_envp(t_minish *mini, char *envp[]);
+void				init_struct(t_minish *mini, char **envp);
+void				minishell(char *line, t_minish *mini);
+void				built_ins(char *line, t_minish *mini);
+int					ft_strcmp(const char *str1, const char *str2);
+void				exit_command(void);
+void				ft_env(t_minish *mini);
+int					ft_pwd(void);
+void				print_line(t_minish *mini);
+void				parse_line(char *line, t_minish *mini);
+int					quotes(char *line, int index);
+int					is_important_sep(char *line, int i);
+void				ft_echo(char *line);
+void				ft_export(char *args, t_minish *mini);
+void				free_envp(char **envp);
+char				**dup_envp(char **envp);
+void				ft_unset(char *name, t_minish *mini);
+void				remove_env_var(t_minish *mini, const char *name);
+void				add_or_update_env_var(t_minish *mini, const char *name,
+						const char *value);
+int					is_valid_env(const char *env);
+int					print_error(int error, const char *arg);
+void				print_sorted_envp(t_minish *mini);
+int					compare_env(const void *a, const void *b);
+void				ft_qsort(void *base, size_t nitems, size_t size,
+						int (*compar)(const void *, const void *));
+
 #endif
