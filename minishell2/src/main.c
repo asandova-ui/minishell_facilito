@@ -39,6 +39,7 @@ void minishell(char *line, t_minish *mini)
     //ya tienes la linea con control de caracteres especiales y de comillas
     //si el caracter es no reconocible ASCII(-36) significa que es dolar seguido de cosas, es decir toca poner el valor de la variable
     built_ins(line, mini);//solo builtins
+    
     //ahora los comandos requeridos
 }
 

@@ -6,7 +6,7 @@
 /*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/07/11 08:24:07 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/07/11 09:34:50 by jamorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <errno.h>
 # include <sys/wait.h>
 # include <unistd.h>
 
@@ -78,5 +79,6 @@ void				print_sorted_envp(t_minish *mini);
 int					compare_env(const void *a, const void *b);
 void				ft_qsort(void *base, size_t nitems, size_t size,
 						int (*compar)(const void *, const void *));
+void	ft_cd(char *path, t_minish *mini);
 
 #endif

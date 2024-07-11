@@ -1,4 +1,4 @@
-SRCS = src/main.c src/envp.c src/built_ins/built_ins.c src/built_ins/echo.c src/built_ins/unset.c src/built_ins/env.c src/built_ins/pwd.c src/built_ins/export.c get_next_line/get_next_line_utils.c get_next_line/get_next_line.c src/utils/utils.c src/utils/parse_line.c
+SRCS = src/main.c src/envp.c src/built_ins/built_ins.c src/built_ins/echo.c src/built_ins/cd.c src/built_ins/unset.c src/built_ins/env.c src/built_ins/pwd.c src/built_ins/export.c get_next_line/get_next_line_utils.c get_next_line/get_next_line.c src/utils/utils.c src/utils/parse_line.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFTPRINTF_PATH = ./printf

@@ -58,10 +58,10 @@ void	add_or_update_env_var(t_minish *mini, const char *name,
 	char	**new_envp;
 
 	i = 0;
-	name_len = strlen(name);
+	name_len = ft_strlen(name);
 	while (mini->envp && mini->envp[i])
 	{
-		if (strncmp(mini->envp[i], name, name_len) == 0
+		if (ft_strncmp(mini->envp[i], name, name_len) == 0
 			&& mini->envp[i][name_len] == '=')
 		{
 			// Reemplazar la variable existente

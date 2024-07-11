@@ -8,6 +8,7 @@ void	built_ins(char *line, t_minish *mini)
 	char	*command;
 	char	*args;
 	int		error;
+	char	*home;
 
 	command = strtok(line, " \n");
 	if (command == NULL)
@@ -20,7 +21,14 @@ void	built_ins(char *line, t_minish *mini)
 	}
 	if (ft_strcmp(command, "cd") == 0)
 	{
-		// Implement cd functionality
+		args = strtok(NULL, "\n");
+		if (args == NULL)
+		{
+			home = getenv("HOME");
+			ft_cd(home, mini);
+		}
+		else
+			ft_cd(args, mini);
 	}
 	if (ft_strcmp(command, "pwd") == 0)
 		ft_pwd();
