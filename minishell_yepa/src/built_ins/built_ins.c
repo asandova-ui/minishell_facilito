@@ -77,8 +77,7 @@ void	built_ins(char *line, t_minish *mini)
 	{
 		mini->exec = 1;
 		args = strtok(NULL, "\n");
-		if (args != NULL)
-			ft_exit(args);
+		ft_exit(args);
 	}
 }
 

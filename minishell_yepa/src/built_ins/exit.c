@@ -7,12 +7,12 @@
 void	ft_exit(char *args)
 {
 	char	*arg;
-	char	*temp_args;
 	int		exit_value;
-	int		num_args;
 
-	num_args = 0;
-	temp_args = strdup(args);
+	if (args == NULL || *args == '\0')
+		exit(0);
+	int num_args = 0;
+	char *temp_args = strdup(args);
 	if (!temp_args)
 	{
 		perror("strdup");
@@ -27,30 +27,22 @@ void	ft_exit(char *args)
 	free(temp_args);
 	if (num_args > 1)
 	{
-		write(1, "exit\n", 5);
-		fprintf(stderr, "exit: too many arguments\n");
-        return ;
+		fprintf(stderr, "exit\nbash: exit: too many arguments\n");
+		return;
 	}
-	if (args == NULL || *args == '\0')
-		exit(0);
 	if (!is_valid_number(args))
+		fprintf(stderr, "exit\nbash: exit: %s: numeric argument required\n", args);
+	else
 	{
-		write(1, "exit\n", 5);
-		fprintf(stderr, "exit: %s: numeric argument required\n", args);
-        return ;
+		exit_value = ft_atoi(args);
+		exit(exit_value);
 	}
-	exit_value = ft_atoi(args);
-	if (exit_value < 0 || exit_value > MAX_EXIT_VALUE)
-	{
-		write(1, "exit\n", 5);
-		fprintf(stderr, "exit: %s: numeric argument required\n", args);
-        return ;
-	}
-	exit(exit_value);
 }
 
 int	is_valid_number(const char *str)
 {
+	if (*str == '-' || *str == '+')
+		str++;
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
