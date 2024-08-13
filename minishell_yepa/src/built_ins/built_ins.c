@@ -3,7 +3,7 @@
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
 
-void	built_ins(char *line, t_minish *mini)
+void	built_ins(char *line, t_minish *mini, t_history *history)
 {
 	char	*command;
 	char	*args;
@@ -44,7 +44,7 @@ void	built_ins(char *line, t_minish *mini)
 	{
 		mini->exec = 1;
 		args = strtok(NULL, "\n");
-		if (args == NULL) // No arguments provided
+		if (args == NULL)
 		{
 			ft_export(NULL, mini);
 		}
@@ -79,6 +79,11 @@ void	built_ins(char *line, t_minish *mini)
 		args = strtok(NULL, "\n");
 		ft_exit(args);
 	}
+	if (ft_strcmp(command, "history") == 0)
+    {
+        mini->exec = 1;
+        show_history(history);
+    }
 }
 
 int	ft_strcmp(const char *str1, const char *str2)
@@ -89,4 +94,16 @@ int	ft_strcmp(const char *str1, const char *str2)
 		str2++;
 	}
 	return (*(unsigned char *)str1 - *(unsigned char *)str2);
+}
+
+void show_history(t_history *history)
+{
+    int i;
+
+	i = 0;
+    while (i < history->count)
+    {
+        ft_printf("%d %s", i + 1, history->history[i]);
+        i++;
+    }
 }
