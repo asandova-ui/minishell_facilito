@@ -13,3 +13,17 @@ void print_line(t_minish *mini)
     ft_putstr_fd("\033[1;33mminishell ▸ \033[0m", STDERR);
     fflush(stderr);
 }
+
+void init_struct_history(t_history *history)
+{
+    int j;
+
+    j = 0;
+    history->count = 0;
+    history->i = -1;  
+    while (j < 1000)
+    {
+        history->history[j] = NULL;
+        j++;
+    }
+}
