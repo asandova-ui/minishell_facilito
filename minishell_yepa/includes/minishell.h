@@ -64,11 +64,18 @@ typedef struct s_sig
 	pid_t			pid;
 }					t_sig;
 
+typedef struct s_history
+{
+	char	*history[1000];
+	int		count;
+	int 	i;
+}				t_history;
+
 
 void				init_path(t_minish *mini);
 void				init_struct(t_minish *mini, char **envp);
-void				minishell(char *line, t_minish *mini);
-void				built_ins(char *line, t_minish *mini);
+void minishell(char *line, t_minish *mini, t_history *history);
+void	built_ins(char *line, t_minish *mini, t_history *history);
 int					ft_strcmp(const char *str1, const char *str2);
 void				exit_command(void);
 void				ft_env(t_minish *mini);
@@ -102,4 +109,7 @@ char				*ft_strncpy(char *dest, const char *src, size_t n);
 char				*get_env_value(const char *name);
 int	is_valid_number(const char *str);
 void	sig_quit(int code);
+void init_struct_history(t_history *history);
+void add_to_history(t_history *history, char *command);
+void show_history(t_history *history);
 #endif
