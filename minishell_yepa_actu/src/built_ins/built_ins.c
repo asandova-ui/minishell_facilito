@@ -1,0 +1,109 @@
+
+#include "../../includes/minishell.h"
+#include "../../printf/includes/ft_printf.h"
+#include "../../printf/libft/libft.h"
+
+void	built_ins(char *line, t_minish *mini, t_history *history)
+{
+	char	*command;
+	char	*args;
+	int		error;
+	char	*home;
+
+	command = strtok(line, " \n");
+	if (command == NULL)
+	{
+		mini->exec = 1;
+		return ;
+	}
+	if (ft_strcmp(command, "echo") == 0)
+	{
+		mini->exec = 1;
+		args = strtok(NULL, "\n");
+		if (args != NULL && mini->comillas != 1)
+			ft_echo(args);
+	}
+	if (ft_strcmp(command, "cd") == 0)
+	{
+		mini->exec = 1;
+		args = strtok(NULL, "\n");
+		if (args == NULL)
+		{
+			home = getenv("HOME");
+			ft_cd(home, mini);
+		}
+		else
+			ft_cd(args, mini);
+	}
+	if (ft_strcmp(command, "pwd") == 0)
+	{
+		mini->exec = 1;
+		ft_pwd();
+	}
+	if (ft_strcmp(command, "export") == 0)
+	{
+		mini->exec = 1;
+		args = strtok(NULL, "\n");
+		if (args == NULL)
+		{
+			ft_export(NULL, mini);
+		}
+		else
+		{
+			error = is_valid_env(args);
+			if (args[0] == '=')
+				error = -3;
+			if (error != 1)
+			{
+				print_error(error, args);
+				return ;
+			}
+			ft_export(args, mini);
+		}
+	}
+	if (ft_strcmp(command, "unset") == 0)
+	{
+		mini->exec = 1;
+		args = strtok(NULL, "\n");
+		if (args != NULL)
+			ft_unset(args, mini); // Pasar mini para actualizar envp
+	}
+	if (ft_strcmp(command, "env") == 0)
+	{
+		mini->exec = 1;
+		ft_env(mini);
+	}
+	if (ft_strcmp(command, "exit") == 0)
+	{
+		mini->exec = 1;
+		args = strtok(NULL, "\n");
+		ft_exit(args);
+	}
+	if (ft_strcmp(command, "history") == 0)
+    {
+        mini->exec = 1;
+        show_history(history);
+    }
+}
+
+int	ft_strcmp(const char *str1, const char *str2)
+{
+	while (*str1 && (*str1 == *str2))
+	{
+		str1++;
+		str2++;
+	}
+	return (*(unsigned char *)str1 - *(unsigned char *)str2);
+}
+
+void show_history(t_history *history)
+{
+    int i;
+
+	i = 0;
+    while (i < history->count)
+    {
+        ft_printf("%d %s", i + 1, history->history[i]);
+        i++;
+    }
+}
