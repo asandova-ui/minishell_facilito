@@ -8,6 +8,8 @@
 #include <string.h>
 #include <sys/wait.h>
 
+
+
 char *ft_strjoin_3args(char const *s1, char connector, char const *s2)
 {
     char *str;
@@ -31,121 +33,109 @@ char *ft_strjoin_3args(char const *s1, char connector, char const *s2)
     return (str);
 }
 
-int execute_from_path(char *line, t_minish *mini)
-{
-    int i;
-    char **command;
-    char *ubication;
+typedef struct s_redirection {
+    char *infile;
+    char *outfile;
+    char *heredoc_delim;
+    int append_mode;
+} t_redirection;
 
-    i = 0;
-    command = ft_split(line, ' ');
-    while (mini->path[i])
-    {
-        ubication = ft_strjoin_3args(mini->path[i], '/', command[0]);
-        if (access(ubication, X_OK) == 0)
-        {
-            execve(ubication, command, mini->envp);
-            perror("execve error");
-            free(ubication);
-            exit(EXIT_FAILURE); // Termina el proceso hijo si execve falla
+
+void init_redirection(t_redirection *red) {
+    red->infile = NULL;
+    red->outfile = NULL;
+    red->heredoc_delim = NULL;
+    red->append_mode = 0;
+}
+
+void free_redirection(t_redirection *red) {
+    free(red->infile);
+    free(red->outfile);
+    free(red->heredoc_delim);
+}
+
+char *trim_whitespace(char *str) {
+    while (*str && (*str == ' ' || *str == '\t'))
+        str++;
+    char *end = str + strlen(str) - 1;
+    while (end > str && (*end == ' ' || *end == '\t'))
+        end--;
+    *(end + 1) = '\0';
+    return str;
+}
+
+char **parse_command(char *cmd, t_redirection *red) {
+    char **args = NULL;
+    int arg_count = 0;
+    char *token;
+    char *rest = cmd;
+    
+    while ((token = strtok_r(rest, " \t", &rest))) {
+        if (strcmp(token, "<") == 0 || strcmp(token, ">") == 0 ||
+            strcmp(token, ">>") == 0 || strcmp(token, "<<") == 0) {
+            char *file = strtok_r(NULL, " \t", &rest);
+            if (file) {
+                if (strcmp(token, "<") == 0) {
+                    free(red->infile);
+                    red->infile = strdup(file);
+                } else if (strcmp(token, ">") == 0) {
+                    free(red->outfile);
+                    red->outfile = strdup(file);
+                    red->append_mode = 0;
+                } else if (strcmp(token, ">>") == 0) {
+                    free(red->outfile);
+                    red->outfile = strdup(file);
+                    red->append_mode = 1;
+                } else if (strcmp(token, "<<") == 0) {
+                    free(red->heredoc_delim);
+                    red->heredoc_delim = strdup(file);
+                }
+            }
+        } else {
+            args = realloc(args, (arg_count + 2) * sizeof(char *));
+            args[arg_count++] = strdup(token);
         }
-        free(ubication);
-        i++;
     }
-
-    // Si no encuentra un ejecutable en el path, retorna 0 para intentar con ruta absoluta
-    return 0;
+    if (args)
+        args[arg_count] = NULL;
+    return args;
 }
 
-int execute_command(char *line, t_minish *mini)
-{
-    char **command;
-
-    command = ft_split(line, ' ');
-    if (access(command[0], X_OK) == 0)
-    {
-        execve(command[0], command, mini->envp);
-        perror("execve error");
-        free(command);
-        return 1; // Error ejecutando el comando
-    }
-    fprintf(stderr, "Command not found or not executable: %s\n", command[0]);
-    free(command);
-    return 1; // Comando no encontrado o no ejecutable
-}
-
-void handle_redirections(char *cmd)
-{
-    char *infile = NULL;
-    char *outfile = NULL;
-    char *heredoc_delim = NULL;
-    char *ptr;
-
-    // Manejo de la redirección de entrada heredoc "<<"
-    if ((ptr = strstr(cmd, "<<")) != NULL)
-    {
-        *ptr = '\0';
-        heredoc_delim = strtok(ptr + 2, " \t");
-    }
-
-    // Manejo de la redirección de entrada "<"
-    if ((ptr = strchr(cmd, '<')) != NULL && !heredoc_delim)
-    {
-        *ptr = '\0';
-        infile = strtok(ptr + 1, " \t");
-    }
-
-    // Manejo de la redirección de salida ">>" o ">"
-    if ((ptr = strstr(cmd, ">>")) != NULL)
-    {
-        *ptr = '\0';
-        outfile = strtok(ptr + 2, " \t");
-    }
-    else if ((ptr = strchr(cmd, '>')) != NULL)
-    {
-        *ptr = '\0';
-        outfile = strtok(ptr + 1, " \t");
-    }
-
-    // Manejo de heredoc "<<"
-    if (heredoc_delim)
-    {
+void handle_heredoc(t_redirection *red) {
+    if (red->heredoc_delim) {
         int pipefd[2];
-        if (pipe(pipefd) == -1)
-        {
+        if (pipe(pipefd) == -1) {
             perror("pipe");
             exit(EXIT_FAILURE);
         }
 
         char *line = NULL;
         size_t len = 0;
+        ssize_t read;
 
-        // Leemos de la entrada hasta que se encuentre el delimitador
-        while (1)
-        {
-            write(1, "> ", 2);
-            getline(&line, &len, stdin);
-            line[strlen(line) - 1] = '\0';
+        while (1) {
+            write(STDOUT_FILENO, "> ", 2);
+            read = getline(&line, &len, stdin);
+            if (read == -1) break;
+            line[strcspn(line, "\n")] = 0;
 
-            if (strcmp(line, heredoc_delim) == 0)
-                break;
+            if (strcmp(line, red->heredoc_delim) == 0) break;
 
             write(pipefd[1], line, strlen(line));
             write(pipefd[1], "\n", 1);
         }
-        close(pipefd[1]);
-        free(line);
 
+        free(line);
+        close(pipefd[1]);
         dup2(pipefd[0], STDIN_FILENO);
         close(pipefd[0]);
     }
+}
 
-    // Redirección de entrada "<"
-    if (infile)
-    {
-        int fd = open(infile, O_RDONLY);
-        if (fd == -1)
-        {
+void apply_redirections(t_redirection *red) {
+    if (red->infile) {
+        int fd = open(red->infile, O_RDONLY);
+        if (fd == -1) {
             perror("open infile");
             exit(EXIT_FAILURE);
         }
@@ -153,145 +143,154 @@ void handle_redirections(char *cmd)
         close(fd);
     }
 
-    // Redirección de salida ">>" o ">"
-    if (outfile)
-    {
-        int fd;
-        if (strstr(cmd, ">>") != NULL)
-        {
-            fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
-        }
-        else
-        {
-            fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        }
-        if (fd == -1)
-        {
+    if (red->outfile) {
+        int flags = O_WRONLY | O_CREAT;
+        flags |= (red->append_mode) ? O_APPEND : O_TRUNC;
+        int fd = open(red->outfile, flags, 0644);
+        if (fd == -1) {
             perror("open outfile");
             exit(EXIT_FAILURE);
         }
         dup2(fd, STDOUT_FILENO);
         close(fd);
     }
+
+    handle_heredoc(red);
 }
 
-void execute_pipeline(char *line, t_minish *mini)
-{
+int execute_from_path(char **args, t_minish *mini) {
+    if (!mini->path) {
+        fprintf(stderr, "PATH is not set\n");
+        return 0;
+    }
+    int i = 0;
+    while (mini->path[i]) {
+        char *exec_path = ft_strjoin_3args(mini->path[i], '/', args[0]);
+        if (access(exec_path, X_OK) == 0) {
+            execve(exec_path, args, mini->envp);
+            perror("execve");
+            free(exec_path);
+            exit(EXIT_FAILURE);
+        }
+        free(exec_path);
+        i++;
+    }
+    return 0;
+}
+
+void execute_command(char **args, t_minish *mini, t_redirection *red) {
+    apply_redirections(red);
+
+    if (args[0][0] == '/' || args[0][0] == '.') {
+        // Absolute or relative path
+        if (access(args[0], X_OK) == 0) {
+            execve(args[0], args, mini->envp);
+            perror("execve");
+        } else {
+            fprintf(stderr, "Command not found or not executable: %s\n", args[0]);
+        }
+    } else {
+        // Search in PATH
+        if (mini->path != NULL) {
+            execute_from_path(args, mini);
+        }
+        fprintf(stderr, "Command not found: %s\n", args[0]);
+    }
+    exit(EXIT_FAILURE);
+}
+
+void execute_pipeline(char *line, t_minish *mini) {
     char **commands = ft_split(line, '|');
     int i = 0;
     int pipefd[2];
-    int prev_fd = -1;
+    int prev_pipe = -1;
 
-    while (commands[i])
-    {
-        if (commands[i + 1])
-        {
-            if (pipe(pipefd) == -1)
-            {
-                perror("pipe");
-                exit(EXIT_FAILURE);
-            }
-        }
+    while (commands[i]) {
+        t_redirection red;
+        init_redirection(&red);
+        
+        char *trimmed_cmd = trim_whitespace(commands[i]);
+        char **args = parse_command(trimmed_cmd, &red);
 
-        int pid = fork();
-        if (pid == -1)
-        {
-            perror("fork");
+        if (commands[i + 1] && pipe(pipefd) == -1) {
+            perror("pipe");
             exit(EXIT_FAILURE);
         }
-        else if (pid == 0)
-        {
-            if (prev_fd != -1)
-            {
-                dup2(prev_fd, STDIN_FILENO);
-                close(prev_fd);
-            }
 
-            if (commands[i + 1])
-            {
+        pid_t pid = fork();
+        if (pid == -1) {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            if (prev_pipe != -1) {
+                dup2(prev_pipe, STDIN_FILENO);
+                close(prev_pipe);
+            }
+            if (commands[i + 1]) {
+                close(pipefd[0]);
                 dup2(pipefd[1], STDOUT_FILENO);
                 close(pipefd[1]);
             }
-
-            close(pipefd[0]);
-
-            handle_redirections(commands[i]);
-            if (mini->path != NULL && execute_from_path(commands[i], mini) == 0)
-            {
-                exit(EXIT_FAILURE);
-            }
-            else
-            {
-                execute_command(commands[i], mini);
-            }
-        }
-        else
-        {
-            if (commands[i + 1])
-            {
+            execute_command(args, mini, &red);
+        } else {
+            if (prev_pipe != -1) close(prev_pipe);
+            if (commands[i + 1]) {
                 close(pipefd[1]);
-                prev_fd = pipefd[0];
+                prev_pipe = pipefd[0];
+            } else {
+                close(pipefd[0]);
+                close(pipefd[1]);
             }
-            else
-            {
-                if (prev_fd != -1)
-                {
-                    close(prev_fd);
-                }
-            }
-            waitpid(pid, NULL, 0);
+            // Wait for the child process to finish
+            int status;
+            waitpid(pid, &status, 0);
         }
+
+        free_redirection(&red);
+        for (int j = 0; args[j]; j++)
+            free(args[j]);
+        free(args);
         i++;
     }
 
-    for (i = 0; commands[i]; i++)
-    {
+    // Close the last pipe if it's still open
+    if (prev_pipe != -1) close(prev_pipe);
+
+    for (i = 0; commands[i]; i++) {
         free(commands[i]);
     }
     free(commands);
 }
 
-int run_command(char *line, t_minish *mini)
-{
-    int len = ft_strlen(line);
-    line[len] = '\0';
+int run_command(char *line, t_minish *mini) {
     int result = 1;
+    char *trimmed_line = trim_whitespace(line);
 
-    if (strchr(line, '|') != NULL)
-    {
-        execute_pipeline(line, mini);
-    }
-    else
-    {
-        int pid = fork();
-        if (pid == -1)
-        {
+    if (strchr(trimmed_line, '|') != NULL) {
+        execute_pipeline(trimmed_line, mini);
+    } else {
+        t_redirection red;
+        init_redirection(&red);
+        char **args = parse_command(trimmed_line, &red);
+
+        pid_t pid = fork();
+        if (pid == -1) {
             perror("fork");
             return result;
-        }
-        else if (pid == 0)
-        {
-            handle_redirections(line);
-
-            if (mini->path != NULL && execute_from_path(line, mini) == 0)
-            {
-                exit(EXIT_FAILURE);
-            }
-            else
-            {
-                execute_command(line, mini);
-            }
-        }
-        else
-        {
+        } else if (pid == 0) {
+            execute_command(args, mini, &red);
+        } else {
             int status;
             waitpid(pid, &status, 0);
-
-            if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-            {
+            if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
                 result = 0;
             }
         }
+
+        free_redirection(&red);
+        for (int i = 0; args[i]; i++)
+            free(args[i]);
+        free(args);
     }
 
     return result;

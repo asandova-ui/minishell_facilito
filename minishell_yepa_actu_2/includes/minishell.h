@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/16 15:18:14 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/18 10:51:59 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,6 @@ void				add_to_history(t_history *history, char *command);
 void				show_history(t_history *history);
 bool				has_redirection(const char *str);
 char				*redirect_echo(char *line);
-
+void executor(char *line, t_minish *mini);
+void free_paths(char **paths);
 #endif

@@ -10,7 +10,7 @@ void	ft_exit(char *args)
 	int		exit_value;
 
 	if (args == NULL || *args == '\0')
-		exit(0);
+		exit(	EXIT_SUCCESS);
 	int num_args = 0;
 	char *temp_args = strdup(args);
 	if (!temp_args)

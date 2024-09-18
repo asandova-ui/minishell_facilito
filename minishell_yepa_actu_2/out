@@ -1,18 +1,3 @@
-total 60
-drwxr-xr-x 7 jamorale 2019   210 Sep 16 16:05 .
-drwxr-xr-x 6 jamorale 2019    82 Sep 16 08:53 ..
--rw-r--r-- 1 jamorale 2019     0 Sep 16 16:05 1
-drwxr-xr-x 2 jamorale 2019   226 Sep 16 11:01 get_next_line
--rw-r--r-- 1 jamorale 2019     0 Sep 16 08:53 hola1
--rw-r--r-- 1 jamorale 2019     0 Sep 16 08:53 hola2
--rw-r--r-- 1 jamorale 2019     0 Sep 16 08:53 hola3
--rw-r--r-- 1 jamorale 2019     0 Sep 16 08:53 hola4
--rw-r--r-- 1 jamorale 2019     0 Sep 16 16:06 in
-drwxr-xr-x 2 jamorale 2019    25 Sep 16 08:53 includes
--rw-r--r-- 1 jamorale 2019  2001 Sep 16 08:53 Makefile
--rwxr-xr-x 1 jamorale 2019 47192 Sep 16 16:05 minishell
--rw-r--r-- 1 jamorale 2019   208 Sep 16 15:13 oout
--rw-r--r-- 1 jamorale 2019  1106 Sep 16 15:45 out
-drwxr-xr-x 5 jamorale 2019    83 Sep 16 11:01 printf
-drwxr-xr-x 4 jamorale 2019   139 Sep 16 16:05 src
-drwxr-xr-x 2 jamorale 2019    27 Sep 16 14:49 .vscode
+a
+c
+b

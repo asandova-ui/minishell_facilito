@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-
 int main(int argc, char **argv, char **envp)
 {
     t_minish mini;
@@ -32,23 +31,24 @@ int main(int argc, char **argv, char **envp)
         minishell(line, &mini, history);
         free(line);
     }
+     if (mini.path) {
+        free_paths(mini.path); // Asegúrate de tener una función para liberar paths
+    }
     exit(EXIT_SUCCESS);
 }
 
 void minishell(char *line, t_minish *mini, t_history *history)
 {
     char *temp;
-
-    parse_line(line, mini);//vemos que esten cerradas las llaves y comprobamos caracteres especiales: \ $ < >>
     temp = ft_strdup2(line);
     //depurar:
 
-    //ya tienes la linea con control de caracteres especiales y de comillas
-    //si el caracter es no reconocible ASCII(-36) significa que es dolar seguido de cosas, es decir toca poner el valor de la variable
-    built_ins(temp, mini, history);//solo builtins
     
+    built_ins(temp, mini, history);//solo builtins
     if (mini->exec == 0)
         mini->ret_value = run_command(line,mini);
+
+    
     //ahora los comandos requeridos
     mini->exec = 0;
 }

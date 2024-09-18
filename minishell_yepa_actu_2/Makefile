@@ -1,4 +1,4 @@
-SRCS = src/main.c src/envp.c src/built_ins/built_ins.c src/built_ins/echo.c src/built_ins/cd.c src/built_ins/unset.c src/built_ins/env.c src/built_ins/pwd.c src/built_ins/export.c get_next_line/get_next_line_utils.c get_next_line/get_next_line.c src/utils/utils.c src/utils/parse_line.c src/executor.c src/built_ins/exit.c src/utils/signals.c
+SRCS = src/main.c src/envp.c src/built_ins/built_ins.c src/built_ins/echo.c src/built_ins/cd.c src/built_ins/unset.c src/built_ins/env.c src/built_ins/pwd.c src/built_ins/export.c get_next_line/get_next_line_utils.c get_next_line/get_next_line.c src/utils/utils.c src/utils/parse_line.c src/executor.c src/built_ins/exit.c src/utils/signals.c src/free_things.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFTPRINTF_PATH = ./printf
@@ -6,8 +6,8 @@ LIBFTPRINTF = $(LIBFTPRINTF_PATH)/libftprintf.a
 
 CC = cc
 RM = rm -f
+#CFLAGS = -Wall -Wextra -Werror -Iincludes -fsanitize=address
 CFLAGS = -Wall -Wextra -Werror -Iincludes
-
 # Ruta de la biblioteca readline
 READLINE_LIB = -lreadline -lncurses
 
