@@ -15,14 +15,20 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
     init_struct(&mini, envp);
+    g_mini = &mini;
     history = malloc(sizeof(t_history));
+     if (!history) {
+        // Handle malloc failure
+        free_envp(mini.envp);
+        exit(EXIT_FAILURE);
+    }
+    setup_signals();
     init_struct_history(history);
     while (mini.exit == 0)
     {
         init_path(&mini);
         sig_init();
-        signal(SIGINT, &sig_int);
-        signal(SIGQUIT, &sig_quit);
+        //setup_signals();
         //print_line(&mini);
         line = readline("\033[1;32m→ minishell ▸ \033[0m");
         if (line == NULL)
@@ -30,10 +36,14 @@ int main(int argc, char **argv, char **envp)
         add_to_history(history, line);
         minishell(line, &mini, history);
         free(line);
+        line = NULL;
+        if (mini.path) {
+            free_paths(mini.path);
+            mini.path = NULL;
+        }
     }
-     if (mini.path) {
-        free_paths(mini.path); // Asegúrate de tener una función para liberar paths
-    }
+    free_history(history);
+    free_envp(mini.envp);
     exit(EXIT_SUCCESS);
 }
 
@@ -50,6 +60,7 @@ void minishell(char *line, t_minish *mini, t_history *history)
 
     
     //ahora los comandos requeridos
+    free(temp);
     mini->exec = 0;
 }
 

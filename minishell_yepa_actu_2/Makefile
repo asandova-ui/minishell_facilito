@@ -6,8 +6,8 @@ LIBFTPRINTF = $(LIBFTPRINTF_PATH)/libftprintf.a
 
 CC = cc
 RM = rm -f
-#CFLAGS = -Wall -Wextra -Werror -Iincludes -fsanitize=address
-CFLAGS = -Wall -Wextra -Werror -Iincludes
+CFLAGS = -Wall -Wextra -Werror -Iincludes -fsanitize=address
+#CFLAGS = -Wall -Wextra -Werror -Iincludes
 # Ruta de la biblioteca readline
 READLINE_LIB = -lreadline -lncurses
 

@@ -2,7 +2,8 @@
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
 
-t_sig	g_sig;
+t_sig g_sig;
+t_minish *g_mini;
 
 void	sig_quit(int code)
 {
@@ -15,34 +16,47 @@ void	sig_quit(int code)
 		ft_putendl_fd(nbr, STDERR);
 		g_sig.exit_status = 131;
 		g_sig.sigquit = 1;
+		if (g_mini)
+            g_mini->ret_value = 131;
 	}
 	else
 		ft_putstr_fd("\b\b  \b\b", STDERR);
 	free(nbr);
 }
  
-void	sig_int(int code)
+void sig_int(int code)
 {
-	(void)code;
-	if (g_sig.pid == 0)
-	{
-		ft_putstr_fd("\n", STDERR);
-		ft_putstr_fd("\033[0;31m→ ", STDERR);
-		ft_putstr_fd("\033[1;33mminishell ▸ \033[0m", STDERR);
-		g_sig.exit_status = 1;
-	}
-	else
-	{
-		ft_putstr_fd("\n", STDERR);
-		g_sig.exit_status = 130;
-	}
-	g_sig.sigint = 1;
+    (void)code;
+    if (g_sig.pid == 0)
+    {
+        ft_putstr_fd("\n", STDERR);
+        rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay();
+        g_sig.exit_status = 130;
+        if (g_mini)
+            g_mini->ret_value = 130;
+    }
+    else
+    {
+        ft_putstr_fd("\n", STDERR);
+        g_sig.exit_status = 130;
+        if (g_mini)
+            g_mini->ret_value = 130;
+    }
+    g_sig.sigint = 1;
 }
 
-void	sig_init(void)
+void sig_init(void)
 {
-	g_sig.sigint = 0;
-	g_sig.sigquit = 0;
-	g_sig.pid = 0;
-	g_sig.exit_status = 0;
+    g_sig.sigint = 0;
+    g_sig.sigquit = 0;
+    g_sig.pid = 0;
+    g_sig.exit_status = 0;
+}
+
+void setup_signals(void)
+{
+    signal(SIGINT, sig_int);
+    signal(SIGQUIT, SIG_IGN);
 }

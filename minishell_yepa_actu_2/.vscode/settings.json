@@ -2,6 +2,8 @@
     "files.associations": {
         "stdio.h": "c",
         "signal.h": "c",
-        "kk": "c"
+        "kk": "c",
+        "kk+": "c",
+        "minishell.h": "c"
     }
 }

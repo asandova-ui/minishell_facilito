@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/18 10:51:59 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/18 15:04:18 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,11 @@ typedef struct s_sig
 	int				sigint;
 	int				sigquit;
 	int				exit_status;
-	int				up_arrow;
-	int				down_arrow;
 	pid_t			pid;
 }					t_sig;
+
+extern t_sig g_sig;
+extern t_minish *g_mini;
 
 typedef struct s_history
 {
@@ -119,4 +120,6 @@ bool				has_redirection(const char *str);
 char				*redirect_echo(char *line);
 void executor(char *line, t_minish *mini);
 void free_paths(char **paths);
+void free_history(t_history *history);
+void    setup_signals(void);
 #endif

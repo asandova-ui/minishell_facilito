@@ -11,27 +11,40 @@ void	built_ins(char *line, t_minish *mini, t_history *history)
 	char	*home;
 	char *line_copy = strdup(line);
 
+    if (line_copy == NULL) {
+        // Handle memory allocation failure
+        mini->exec = 1;
+        return;
+    }
 	command = strtok(line, " \n");
 	if (command == NULL)
 	{
 		mini->exec = 1;
+        free(line_copy);
 		return ;
 	}
 	 if (ft_strcmp(command, "echo") == 0)
     {
-        args = strtok(NULL, "\n");
+       args = strtok(NULL, "\n");
         if (args != NULL && has_redirection(args))
         {
-            char *nueva_linea = redirect_echo(line_copy);
-            mini->ret_value = run_command(nueva_linea, mini);
-            mini->exec = 1; // Ejecuta echo con redirección
-            return;
+            char *nueva_linea = redirect_echo(line);
+            if (nueva_linea != NULL)
+            {
+                mini->ret_value = run_command(nueva_linea, mini);
+                free(nueva_linea);
+            }
+            mini->exec = 1;
         }
-        mini->exec = 1;
-        if (args != NULL && mini->comillas != 1)
+        else
         {
-            ft_echo(args, mini);
+            mini->exec = 1;
+            if (args != NULL && mini->comillas != 1)
+            {
+                ft_echo(args, mini);
+            }
         }
+        free(line_copy);
         return;
     }
 	if (ft_strcmp(command, "cd") == 0)
@@ -95,6 +108,7 @@ void	built_ins(char *line, t_minish *mini, t_history *history)
         mini->exec = 1;
         show_history(history);
     }
+    free(line_copy);
 }
 
 int	ft_strcmp(const char *str1, const char *str2)
@@ -153,13 +167,13 @@ char *redirect_echo(char *line)
     char *new_line = NULL;
     size_t len;
     char *echo_position;
-    char *bin_echo = "/bin/echo";
+    const char *bin_echo = "/bin/echo";
     
     // Busca la posición de 'echo' en la línea
     echo_position = strstr(line, "echo");
     if (echo_position == NULL)
     {
-        return (NULL); // No es un comando echo, no hacemos nada
+        return NULL; // No es un comando echo, no hacemos nada
     }
 
     // Verifica si hay redirección en la línea
@@ -171,17 +185,17 @@ char *redirect_echo(char *line)
         if (new_line == NULL)
         {
             perror("malloc");
-            exit(EXIT_FAILURE);
+            return NULL; // Return NULL instead of exiting
         }
 
         // Construye la nueva línea
         strncpy(new_line, line, echo_position - line);
-        strcpy(new_line + (echo_position - line), bin_echo);
-        strcpy(new_line + (echo_position - line) + strlen(bin_echo), echo_position + strlen("echo"));
+        new_line[echo_position - line] = '\0'; // Null-terminate after strncpy
+        strcat(new_line, bin_echo);
+        strcat(new_line, echo_position + strlen("echo"));
 
-        // Actualiza la línea original
-        free(line);
-        line = new_line;
+        return new_line;
     }
-	return (new_line);
+
+    return NULL; // No redirection, return NULL
 }
