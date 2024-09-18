@@ -14,56 +14,48 @@ char *expand_env_vars(char *str, t_minish *mini) {
     char *env_var;
     char *env_value;
     char *temp = NULL;
-    while ((start = strchr(start, '$')) != NULL) {
+    while ((start = strchr(start, '$')) != NULL)
+    {
         size_t var_len = 0;
-        while (start[var_len + 1] && (isalnum(start[var_len + 1]) || start[var_len + 1] == '_')) {
+        while (start[var_len + 1] && (isalnum(start[var_len + 1]) || start[var_len + 1] == '_'))
             var_len++;
-        }
-
-        if (var_len > 0) {
+        if (var_len > 0)
+        {
             env_var = strndup(start + 1, var_len);
-            //printf("1 %s\n", env_var);
             env_value = get_env_value(env_var, mini);
-            //printf("2 %s\n", env_value);
-            if (env_value) {
-                // Reemplazar $VAR con su valor
+            if (env_value)
+            {
                 char *prefix = strndup(str, start - str);
                 char *suffix = strdup(start + var_len + 1);
-
                 result = ft_strjoin(prefix, env_value);
-
-                // Liberar el prefijo, ya que ya no lo necesitamos
                 free(prefix);
-
-                // Verificar que se haya unido correctamente antes de continuar
-                if (result) {
-                    // Almacenar temporalmente el resultado para poder liberarlo más tarde
+                if (result)
+                {
                     temp = result;
-
-                    // Combinar el resultado actual con el sufijo
                     result = ft_strjoin(result, suffix);
-
-                    // Liberar la cadena intermedia
                     free(temp);
-                            }
-
-                /*result = ft_strjoin(prefix, env_value);
-                free(prefix);
-                temp = result;
-                result = ft_strjoin(result, suffix);
-                free(temp);*/
+                }
                 free(suffix);
                 free(env_var);
                 free(env_value);
-                return result; // Regresa el string con la variable expandida
+                return result;
+            }
+            else
+            {
+                char *prefix = strndup(str, start - str - 1);
+                char *suffix = strdup(start + var_len + 1);
+                result = ft_strjoin(prefix, suffix);
+                free(suffix);
+                free(prefix);
+                free(env_var);
+                free(env_value);
+                return result;
             }
             free(env_var);
         }
-
-        start++; // Mover el puntero para seguir buscando otras variables
+        start++;
     }
-
-    return (ft_strdup(str)); // Si no hay variables, retornar la misma cadena
+    return (ft_strdup(str));
 }
 
 

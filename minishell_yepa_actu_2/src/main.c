@@ -17,8 +17,8 @@ int main(int argc, char **argv, char **envp)
     init_struct(&mini, envp);
     g_mini = &mini;
     history = malloc(sizeof(t_history));
-     if (!history) {
-        // Handle malloc failure
+     if (!history)
+    {
         free_envp(mini.envp);
         exit(EXIT_FAILURE);
     }
@@ -28,8 +28,6 @@ int main(int argc, char **argv, char **envp)
     {
         init_path(&mini);
         sig_init();
-        //setup_signals();
-        //print_line(&mini);
         line = readline("\033[1;32m→ minishell ▸ \033[0m");
         if (line == NULL)
             break;
@@ -62,17 +60,19 @@ void minishell(char *line, t_minish *mini, t_history *history)
 
 void add_to_history(t_history *history, char *command)
 {
-    // Añadir el comando al historial de readline
-    add_history(command);
+    int i;
 
-    // Manejar el límite del tamaño del historial si es necesario
-    // Puedes ajustar esto según sea necesario
-    if (history->count < 1000) {
+    add_history(command);
+    if (history->count < 1000)
         history->history[history->count++] = strdup(command);
-    } else {
+    else
+    {
         free(history->history[0]);
-        for (int i = 1; i < 1000; i++) {
+        i = 0;
+        while(i < 1000)
+        {
             history->history[i - 1] = history->history[i];
+            i ++;
         }
         history->history[999] = strdup(command);
     }
@@ -87,42 +87,34 @@ void init_struct(t_minish *mini, char **envp)
     mini->envp = NULL;
     mini->env_exist = 0;
     mini->exec=0;
-    if (envp) {
+    if (envp)
         mini->envp = dup_envp(envp);  // Usar dup_envp para duplicar el entorno
-    } else {
+    else
         mini->envp = NULL;
-    }
 }
 
 char **dup_envp(char **envp) {
-    int i = 0;
+    int i;
+     i = 0;
     while (envp[i])
         i++;
 
     char **new_envp = malloc((i + 1) * sizeof(char *));
     if (!new_envp)
         return NULL;
-
-    for (i = 0; envp[i]; i++) {
+    i = 0;
+    while(envp[i])
+    {
         new_envp[i] = ft_strdup(envp[i]);
-        if (!new_envp[i]) {
+        if (!new_envp[i]) 
+        {
             while (i > 0)
                 free(new_envp[--i]);
             free(new_envp);
             return NULL;
         }
+        i ++;
     }
     new_envp[i] = NULL;
-    return new_envp;
-}
-
-void free_envp(char **envp) {
-    int i = 0;
-    if (envp) {
-        while (envp[i]) {
-            free(envp[i]);
-            i++;
-        }
-        free(envp);
-    }
+    return (new_envp);
 }

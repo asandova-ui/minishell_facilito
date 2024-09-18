@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/18 17:49:12 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/18 22:34:27 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,4 +124,5 @@ void free_history(t_history *history);
 void    setup_signals(void);
 char *ft_strjoin_3args(char const *s1, char connector, char const *s2);
 char	*get_env_value(const char *name, t_minish *mini);
+char	*expand_env_vars(char *str, t_minish *mini);
 #endif

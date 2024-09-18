@@ -15,9 +15,7 @@ void	ft_echo(char *line, t_minish *mini)
 	char	*var_name;
 
 	new_line = 1;
-	//printf("1%s\n", line);
 	arg = strtok(line, " \n");
-	//printf("2%s\n", arg);
 	if (arg != NULL && ft_strcmp(arg, "-n") == 0)
 	{
 		new_line = 0;
