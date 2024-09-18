@@ -53,7 +53,6 @@ void minishell(char *line, t_minish *mini, t_history *history)
     temp = ft_strdup2(line);
     //depurar:
 
-    
     built_ins(temp, mini, history);//solo builtins
     if (mini->exec == 0)
         mini->ret_value = run_command(line,mini);
