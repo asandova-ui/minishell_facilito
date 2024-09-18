@@ -8,6 +8,63 @@
 #include <string.h>
 #include <sys/wait.h>
 
+char *expand_env_vars(char *str, t_minish *mini) {
+    char *result = NULL;
+    char *start = str;
+    char *env_var;
+    char *env_value;
+    char *temp = NULL;
+    while ((start = strchr(start, '$')) != NULL) {
+        size_t var_len = 0;
+        while (start[var_len + 1] && (isalnum(start[var_len + 1]) || start[var_len + 1] == '_')) {
+            var_len++;
+        }
+
+        if (var_len > 0) {
+            env_var = strndup(start + 1, var_len);
+            //printf("1 %s\n", env_var);
+            env_value = get_env_value(env_var, mini);
+            //printf("2 %s\n", env_value);
+            if (env_value) {
+                // Reemplazar $VAR con su valor
+                char *prefix = strndup(str, start - str);
+                char *suffix = strdup(start + var_len + 1);
+
+                result = ft_strjoin(prefix, env_value);
+
+                // Liberar el prefijo, ya que ya no lo necesitamos
+                free(prefix);
+
+                // Verificar que se haya unido correctamente antes de continuar
+                if (result) {
+                    // Almacenar temporalmente el resultado para poder liberarlo más tarde
+                    temp = result;
+
+                    // Combinar el resultado actual con el sufijo
+                    result = ft_strjoin(result, suffix);
+
+                    // Liberar la cadena intermedia
+                    free(temp);
+                            }
+
+                /*result = ft_strjoin(prefix, env_value);
+                free(prefix);
+                temp = result;
+                result = ft_strjoin(result, suffix);
+                free(temp);*/
+                free(suffix);
+                free(env_var);
+                free(env_value);
+                return result; // Regresa el string con la variable expandida
+            }
+            free(env_var);
+        }
+
+        start++; // Mover el puntero para seguir buscando otras variables
+    }
+
+    return (ft_strdup(str)); // Si no hay variables, retornar la misma cadena
+}
 
 
 char *ft_strjoin_3args(char const *s1, char connector, char const *s2)
@@ -264,7 +321,8 @@ void execute_pipeline(char *line, t_minish *mini) {
 
 int run_command(char *line, t_minish *mini) {
     int result = 1;
-    char *trimmed_line = trim_whitespace(line);
+    char *trimmed_line;
+    trimmed_line = expand_env_vars(trim_whitespace(line), mini);
 
     if (strchr(trimmed_line, '|') != NULL) {
         execute_pipeline(trimmed_line, mini);
@@ -292,6 +350,6 @@ int run_command(char *line, t_minish *mini) {
             free(args[i]);
         free(args);
     }
-
+    free(trimmed_line);
     return result;
 }

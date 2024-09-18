@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/18 15:04:18 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/18 17:49:12 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void				sig_init(void);
 void				ft_exit(char *args);
 char				*ft_strndup(const char *s, size_t n);
 char				*ft_strncpy(char *dest, const char *src, size_t n);
-char				*get_env_value(const char *name);
+char				*get_env_value(const char *name, t_minish *mini);
 int					is_valid_number(const char *str);
 void				sig_quit(int code);
 void				init_struct_history(t_history *history);
@@ -122,4 +122,6 @@ void executor(char *line, t_minish *mini);
 void free_paths(char **paths);
 void free_history(t_history *history);
 void    setup_signals(void);
+char *ft_strjoin_3args(char const *s1, char connector, char const *s2);
+char	*get_env_value(const char *name, t_minish *mini);
 #endif

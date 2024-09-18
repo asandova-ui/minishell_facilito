@@ -16,19 +16,25 @@ void	built_ins(char *line, t_minish *mini, t_history *history)
         mini->exec = 1;
         return;
     }
+    //printf("aaaa %s\n", line_copy);
 	command = strtok(line, " \n");
+    //printf("%s\n", command);
 	if (command == NULL)
 	{
 		mini->exec = 1;
         free(line_copy);
 		return ;
 	}
+    //printf("123 %s\n", line);
 	 if (ft_strcmp(command, "echo") == 0)
     {
        args = strtok(NULL, "\n");
+       //printf("%s\n", args);
         if (args != NULL && has_redirection(args))
         {
-            char *nueva_linea = redirect_echo(line);
+            //printf("1%s\n", line);
+            char *nueva_linea = redirect_echo(line_copy);
+            //printf("%s\n", nueva_linea);
             if (nueva_linea != NULL)
             {
                 mini->ret_value = run_command(nueva_linea, mini);
@@ -168,6 +174,7 @@ char *redirect_echo(char *line)
     size_t len;
     char *echo_position;
     const char *bin_echo = "/bin/echo";
+    //printf("%s\n", line);
     
     // Busca la posición de 'echo' en la línea
     echo_position = strstr(line, "echo");

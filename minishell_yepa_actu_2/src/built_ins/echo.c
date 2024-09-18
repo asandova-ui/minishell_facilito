@@ -15,7 +15,9 @@ void	ft_echo(char *line, t_minish *mini)
 	char	*var_name;
 
 	new_line = 1;
+	//printf("1%s\n", line);
 	arg = strtok(line, " \n");
+	//printf("2%s\n", arg);
 	if (arg != NULL && ft_strcmp(arg, "-n") == 0)
 	{
 		new_line = 0;
@@ -41,7 +43,7 @@ void	ft_echo(char *line, t_minish *mini)
 						var_end++;
 					var_len = var_end - var_start;
 					var_name = ft_strndup(var_start, var_len);
-					env_value = get_env_value(var_name);
+					env_value = get_env_value(var_name, mini);
 					free(var_name);
 					if (env_value)
 					{
@@ -67,11 +69,25 @@ void	ft_echo(char *line, t_minish *mini)
 		write(1, "\n", 1);
 }
 
-char	*get_env_value(const char *name)
+char *mini_getenv(t_minish *mini, const char *name) {
+    int i = 0;
+    size_t len = strlen(name);
+    
+    while (mini->envp[i] != NULL) {
+        if (strncmp(mini->envp[i], name, len) == 0 && mini->envp[i][len] == '=') {
+            return mini->envp[i] + len + 1;
+        }
+        i++;
+    }
+    return NULL;
+}
+
+char	*get_env_value(const char *name, t_minish *mini)
 {
 	char	*value;
 
-	value = getenv(name);
+	value = mini_getenv(mini, name);
+
 	if (value != NULL)
 		return (ft_strdup(value));
 	else

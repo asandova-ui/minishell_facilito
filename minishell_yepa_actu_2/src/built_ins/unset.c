@@ -12,7 +12,7 @@ void	ft_unset(char *args, t_minish *mini)
 	{
 		remove_env_var(mini, arg);
 		arg = strtok(NULL, " \n");
-		init_path(mini);
+		//init_path(mini);
 	}
 }
 

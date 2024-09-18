@@ -49,16 +49,13 @@ int main(int argc, char **argv, char **envp)
 
 void minishell(char *line, t_minish *mini, t_history *history)
 {
+
     char *temp;
     temp = ft_strdup2(line);
-    //depurar:
-
-    built_ins(temp, mini, history);//solo builtins
+    
+    built_ins(temp, mini, history);
     if (mini->exec == 0)
         mini->ret_value = run_command(line,mini);
-
-    
-    //ahora los comandos requeridos
     free(temp);
     mini->exec = 0;
 }
