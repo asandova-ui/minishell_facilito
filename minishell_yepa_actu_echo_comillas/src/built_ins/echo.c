@@ -4,7 +4,7 @@
 #include "../../printf/libft/libft.h"
 
 char *handle_quotes(const char *str) {
-    char *result = malloc(strlen(str) + 1);  // Allocate max size
+    char *result = malloc(strlen(str) + 1);  // Asignar tamaño máximo
     if (result == NULL) {
         perror("malloc");
         exit(EXIT_FAILURE);
@@ -14,7 +14,7 @@ char *handle_quotes(const char *str) {
     int in_single_quote = 0;
     int in_double_quote = 0;
 
-    // Procesar la primera cadena para manejar las comillas
+    // Procesar la cadena para manejar comillas
     while (*start) {
         if (*start == '\'' && !in_double_quote) {
             in_single_quote = !in_single_quote;
@@ -23,7 +23,7 @@ char *handle_quotes(const char *str) {
         }
         *ptr++ = *start++;
     }
-    *ptr = '\0';  // Finalizar la cadena procesada
+    *ptr = '\0';  // Terminar la cadena procesada
 
     // Si hay comillas no cerradas, solicitar más entrada
     while (in_single_quote || in_double_quote) {
@@ -34,7 +34,7 @@ char *handle_quotes(const char *str) {
         }
 
         // Reasignar memoria para la nueva entrada
-        size_t new_len = strlen(result) + strlen(extra_input) + 1;  // +1 para el terminador nulo
+        size_t new_len = strlen(result) + strlen(extra_input) + 1;
         char *new_result = realloc(result, new_len);
         if (new_result == NULL) {
             perror("realloc");
@@ -45,7 +45,6 @@ char *handle_quotes(const char *str) {
 
         result = new_result;
         strcat(result, extra_input);  // Añadir la nueva entrada a la cadena
-
         free(extra_input);
 
         // Re-evaluar las comillas en la cadena combinada
@@ -67,28 +66,7 @@ char *handle_quotes(const char *str) {
         }
     }
 
-    // Eliminar comillas que se hayan quedado en la cadena
-    char *final_result = malloc(strlen(result) + 1);
-    if (final_result == NULL) {
-        perror("malloc");
-        free(result);
-        exit(EXIT_FAILURE);
-    }
-
-    char *f_ptr = final_result;
-    ptr = result;
-    while (*ptr) {
-        if (*ptr == '\'' || *ptr == '\"') {
-            // Omitir comillas en la salida final
-            ptr++;
-        } else {
-            *f_ptr++ = *ptr++;
-        }
-    }
-    *f_ptr = '\0';
-
-    free(result);
-    return final_result;  // Devolver la cadena procesada sin comillas
+    return result;  // Devolver la cadena procesada
 }
 
 void ft_echo(char *line, t_minish *mini) {
@@ -111,6 +89,7 @@ void ft_echo(char *line, t_minish *mini) {
         char *current = arg;
         while (*current) {
             if (*current == '$') {
+                // Manejar variables de entorno y $? (ret_value)
                 if (*(current + 1) == '?') {
                     ft_putnbr_fd(mini->ret_value, 1);
                     current += 2;
@@ -129,7 +108,19 @@ void ft_echo(char *line, t_minish *mini) {
                     }
                     current = var_end;
                 }
+            } else if (*current == '\'' || *current == '\"') {
+                // No imprimir las comillas externas balanceadas
+                char quote_char = *current;
+                current++;
+                while (*current && *current != quote_char) {
+                    write(1, current, 1);
+                    current++;
+                }
+                if (*current == quote_char) {
+                    current++;  // Saltar la comilla de cierre
+                }
             } else {
+                // Imprimir el contenido fuera de las comillas
                 write(1, current, 1);
                 current++;
             }
@@ -145,6 +136,7 @@ void ft_echo(char *line, t_minish *mini) {
 
     free(processed_line);
 }
+
 char *mini_getenv(t_minish *mini, const char *name) {
     int i = 0;
     size_t len = strlen(name);
