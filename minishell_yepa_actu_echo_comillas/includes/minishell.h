@@ -88,7 +88,7 @@ void				print_line(t_minish *mini);
 void				parse_line(char *line, t_minish *mini);
 int					quotes(char *line, int index);
 int					is_important_sep(char *line, int i);
-void				ft_echo(char *line, t_minish *mini);
+void ft_echo(char *line, t_minish *mini);
 void				ft_export(char *args, t_minish *mini);
 void				free_envp(char **envp);
 char				**dup_envp(char **envp);
