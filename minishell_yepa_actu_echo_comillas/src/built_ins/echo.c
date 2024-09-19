@@ -14,19 +14,81 @@ char *handle_quotes(const char *str) {
     int in_single_quote = 0;
     int in_double_quote = 0;
 
+    // Procesar la primera cadena para manejar las comillas
     while (*start) {
         if (*start == '\'' && !in_double_quote) {
             in_single_quote = !in_single_quote;
-            start++;
         } else if (*start == '\"' && !in_single_quote) {
             in_double_quote = !in_double_quote;
-            start++;
-        } else {
-            *ptr++ = *start++;
+        }
+        *ptr++ = *start++;
+    }
+    *ptr = '\0';  // Finalizar la cadena procesada
+
+    // Si hay comillas no cerradas, solicitar más entrada
+    while (in_single_quote || in_double_quote) {
+        printf("quote> ");  // Imprimir el prompt tipo bash
+        char *extra_input = readline(NULL);  // Leer entrada adicional
+        if (!extra_input) {
+            break;  // Si no se recibe más entrada, salir del bucle
+        }
+
+        // Reasignar memoria para la nueva entrada
+        size_t new_len = strlen(result) + strlen(extra_input) + 1;  // +1 para el terminador nulo
+        char *new_result = realloc(result, new_len);
+        if (new_result == NULL) {
+            perror("realloc");
+            free(result);
+            free(extra_input);
+            exit(EXIT_FAILURE);
+        }
+
+        result = new_result;
+        strcat(result, extra_input);  // Añadir la nueva entrada a la cadena
+
+        free(extra_input);
+
+        // Re-evaluar las comillas en la cadena combinada
+        ptr = result;
+        in_single_quote = 0;
+        in_double_quote = 0;
+        while (*ptr) {
+            if (*ptr == '\'' && !in_double_quote) {
+                in_single_quote = !in_single_quote;
+            } else if (*ptr == '\"' && !in_single_quote) {
+                in_double_quote = !in_double_quote;
+            }
+            ptr++;
+        }
+
+        // Salir si las comillas se cierran correctamente
+        if (!in_single_quote && !in_double_quote) {
+            break;
         }
     }
-    *ptr = '\0';
-    return result;
+
+    // Eliminar comillas que se hayan quedado en la cadena
+    char *final_result = malloc(strlen(result) + 1);
+    if (final_result == NULL) {
+        perror("malloc");
+        free(result);
+        exit(EXIT_FAILURE);
+    }
+
+    char *f_ptr = final_result;
+    ptr = result;
+    while (*ptr) {
+        if (*ptr == '\'' || *ptr == '\"') {
+            // Omitir comillas en la salida final
+            ptr++;
+        } else {
+            *f_ptr++ = *ptr++;
+        }
+    }
+    *f_ptr = '\0';
+
+    free(result);
+    return final_result;  // Devolver la cadena procesada sin comillas
 }
 
 void ft_echo(char *line, t_minish *mini) {
@@ -35,7 +97,7 @@ void ft_echo(char *line, t_minish *mini) {
     char *env_value;
     char *processed_line;
 
-    // Process input line to handle quotes
+    // Procesar la línea de entrada para manejar las comillas
     processed_line = handle_quotes(line);
 
     arg = strtok(processed_line, " \n");
@@ -83,7 +145,6 @@ void ft_echo(char *line, t_minish *mini) {
 
     free(processed_line);
 }
-
 char *mini_getenv(t_minish *mini, const char *name) {
     int i = 0;
     size_t len = strlen(name);
