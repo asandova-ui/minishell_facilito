@@ -256,71 +256,91 @@ void execute_command(char **args, t_minish *mini, t_redirection *red) {
     exit(EXIT_FAILURE);
 }
 
+
 void execute_pipeline(char *line, t_minish *mini) {
     char **commands = ft_split(line, '|');
-    int i = 0;
-    int pipefd[2];
-    int prev_pipe = -1;
+    int cmd_count = 0;
+    while (commands[cmd_count]) cmd_count++;
 
-    while (commands[i]) {
+    int pipes[cmd_count - 1][2];
+    pid_t pids[cmd_count];
+
+    for (int i = 0; i < cmd_count - 1; i++) {
+        if (pipe(pipes[i]) == -1) {
+            perror("pipe");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    for (int i = 0; i < cmd_count; i++) {
         t_redirection red;
         init_redirection(&red);
         
         char *trimmed_cmd = trim_whitespace(commands[i]);
         char **args = parse_command(trimmed_cmd, &red);
 
-        if (commands[i + 1] && pipe(pipefd) == -1) {
-            perror("pipe");
-            exit(EXIT_FAILURE);
-        }
-
-        pid_t pid = fork();
-        if (pid == -1) {
+        pids[i] = fork();
+        if (pids[i] == -1) {
             perror("fork");
             exit(EXIT_FAILURE);
-        } else if (pid == 0) {
-            if (prev_pipe != -1) {
-                dup2(prev_pipe, STDIN_FILENO);
-                close(prev_pipe);
+        } else if (pids[i] == 0) {
+            // Configurar entrada para todos excepto el primer comando
+            if (i > 0) {
+                dup2(pipes[i-1][0], STDIN_FILENO);
             }
-            if (commands[i + 1]) {
-                close(pipefd[0]);
-                dup2(pipefd[1], STDOUT_FILENO);
-                close(pipefd[1]);
+            
+            // Configurar salida para todos excepto el último comando
+            if (i < cmd_count - 1) {
+                dup2(pipes[i][1], STDOUT_FILENO);
             }
+
+            // Cerrar todos los pipes en el proceso hijo
+            for (int j = 0; j < cmd_count - 1; j++) {
+                close(pipes[j][0]);
+                close(pipes[j][1]);
+            }
+
             execute_command(args, mini, &red);
-        } else {
-            if (prev_pipe != -1) close(prev_pipe);
-            if (commands[i + 1]) {
-                close(pipefd[1]);
-                prev_pipe = pipefd[0];
-            } else {
-                close(pipefd[0]);
-                close(pipefd[1]);
-            }
-            // Wait for the child process to finish
-            int status;
-            waitpid(pid, &status, 0);
+            // El proceso hijo no debería llegar aquí
+            exit(EXIT_FAILURE);
         }
 
+        // Proceso padre
         free_redirection(&red);
         for (int j = 0; args[j]; j++)
             free(args[j]);
         free(args);
-        i++;
     }
 
-    // Close the last pipe if it's still open
-    if (prev_pipe != -1) close(prev_pipe);
+    // Cerrar todos los pipes en el proceso padre
+    for (int i = 0; i < cmd_count - 1; i++) {
+        close(pipes[i][0]);
+        close(pipes[i][1]);
+    }
 
-    for (i = 0; commands[i]; i++) {
+    // Esperar a que todos los procesos hijos terminen y obtener el estado del último
+    for (int i = 0; i < cmd_count; i++) {
+        int status;
+        waitpid(pids[i], &status, 0);
+        if (i == cmd_count - 1) {  // Este es el último comando
+            if (WIFEXITED(status)) {
+                mini->ret_value = WEXITSTATUS(status);
+            } else if (WIFSIGNALED(status)) {
+                mini->ret_value = 128 + WTERMSIG(status);
+            } else {
+                mini->ret_value = 1;  // Caso por defecto si algo sale mal
+            }
+        }
+    }
+
+    // Limpiar la memoria
+    for (int i = 0; commands[i]; i++) {
         free(commands[i]);
     }
     free(commands);
 }
 
 int run_command(char *line, t_minish *mini) {
-    int result = 1;
     char *trimmed_line;
     trimmed_line = expand_env_vars(trim_whitespace(line), mini);
 
@@ -334,14 +354,19 @@ int run_command(char *line, t_minish *mini) {
         pid_t pid = fork();
         if (pid == -1) {
             perror("fork");
-            return result;
+            mini->ret_value = 1;
         } else if (pid == 0) {
             execute_command(args, mini, &red);
+            exit(EXIT_FAILURE);
         } else {
             int status;
             waitpid(pid, &status, 0);
-            if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-                result = 0;
+            if (WIFEXITED(status)) {
+                mini->ret_value = WEXITSTATUS(status);
+            } else if (WIFSIGNALED(status)) {
+                mini->ret_value = 128 + WTERMSIG(status);
+            } else {
+                mini->ret_value = 1;
             }
         }
 
@@ -351,5 +376,5 @@ int run_command(char *line, t_minish *mini) {
         free(args);
     }
     free(trimmed_line);
-    return result;
+    return mini->ret_value;
 }

@@ -1,0 +1,12 @@
+total 128
+drwxr-xr-x 6 alonso alonso  4096 Sep 21 10:39 .
+drwxr-xr-x 8 alonso alonso  4096 Sep 18 20:26 ..
+-rw-r--r-- 1 alonso alonso     0 Sep 21 10:39 1
+-rw-r--r-- 1 alonso alonso  2080 Sep 18 20:26 Makefile
+drwxr-xr-x 2 alonso alonso  4096 Sep 21 10:29 get_next_line
+-rw-r--r-- 1 alonso alonso     0 Sep 21 10:41 in
+drwxr-xr-x 2 alonso alonso  4096 Sep 19 09:26 includes
+-rwxr-xr-x 1 alonso alonso 95552 Sep 21 10:39 minishell
+-rw-r--r-- 1 alonso alonso    62 Sep 21 10:35 out
+drwxr-xr-x 5 alonso alonso  4096 Sep 21 10:29 printf
+drwxr-xr-x 4 alonso alonso  4096 Sep 21 10:39 src

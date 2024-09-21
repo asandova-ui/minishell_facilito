@@ -3,117 +3,127 @@
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
 
-void	built_ins(char *line, t_minish *mini, t_history *history)
+void built_ins(char *line, t_minish *mini, t_history *history)
 {
-	char	*command;
-	char	*args;
-	int		error;
-	char	*home;
-	char *line_copy = strdup(line);
+    char *command;
+    char *args;
+    int error;
+    char *home;
+    char *line_copy = strdup(line);
 
     if (line_copy == NULL) {
-        // Handle memory allocation failure
+        mini->ret_value = 1;
         mini->exec = 1;
         return;
     }
-    //printf("aaaa %s\n", line_copy);
-	command = strtok(line, " \n");
-    //printf("%s\n", command);
-	if (command == NULL)
-	{
-		mini->exec = 1;
-        free(line_copy);
-		return ;
-	}
-    //printf("123 %s\n", line);
-	 if (ft_strcmp(command, "echo") == 0)
+
+    command = strtok(line, " \n");
+    if (command == NULL)
     {
-       args = strtok(NULL, "\n");
-       //printf("%s\n", args);
-        if (args != NULL && has_redirection(args))
+        mini->ret_value = 0;
+        mini->exec = 1;
+        free(line_copy);
+        return;
+    }
+
+    if (ft_strcmp(command, "echo") == 0)
+    {
+        args = strtok(NULL, "\n");
+        if (args == NULL)
         {
-            //printf("1%s\n", line);
+            write(1, "\n", 1);
+            mini->ret_value = 0;
+        }
+        else if (has_redirection(args))
+        {
             char *nueva_linea = redirect_echo(line_copy);
-            //printf("%s\n", nueva_linea);
             if (nueva_linea != NULL)
             {
                 mini->ret_value = run_command(nueva_linea, mini);
                 free(nueva_linea);
             }
-            mini->exec = 1;
         }
         else
         {
-            mini->exec = 1;
-            if (args != NULL && mini->comillas != 1)
+            if (mini->comillas != 1)
             {
                 ft_echo(args, mini);
             }
+            mini->ret_value = 0;
         }
-        free(line_copy);
-        return;
-    }
-	if (ft_strcmp(command, "cd") == 0)
-	{
-		mini->exec = 1;
-		args = strtok(NULL, "\n");
-		if (args == NULL)
-		{
-			home = getenv("HOME");
-			ft_cd(home, mini);
-		}
-		else
-			ft_cd(args, mini);
-	}
-	if (ft_strcmp(command, "pwd") == 0)
-	{
-		mini->exec = 1;
-		ft_pwd();
-	}
-	if (ft_strcmp(command, "export") == 0)
-	{
-		mini->exec = 1;
-		args = strtok(NULL, "\n");
-		if (args == NULL)
-		{
-			ft_export(NULL, mini);
-		}
-		else
-		{
-			error = is_valid_env(args);
-			if (args[0] == '=')
-				error = -3;
-			if (error != 1)
-			{
-				print_error(error, args);
-				return ;
-			}
-			ft_export(args, mini);
-		}
-	}
-	if (ft_strcmp(command, "unset") == 0)
-	{
-		mini->exec = 1;
-		args = strtok(NULL, "\n");
-		if (args != NULL)
-			ft_unset(args, mini); // Pasar mini para actualizar envp
-	}
-	if (ft_strcmp(command, "env") == 0)
-	{
-		mini->exec = 1;
-		ft_env(mini);
-	}
-	if (ft_strcmp(command, "exit") == 0)
-	{
-		mini->exec = 1;
-		args = strtok(NULL, "\n");
-		ft_exit(args);
-	}
-	if (ft_strcmp(command, "history") == 0)
-    {
         mini->exec = 1;
-        show_history(history);
     }
+    else if (ft_strcmp(command, "cd") == 0)
+    {
+        args = strtok(NULL, "\n");
+        if (args == NULL)
+        {
+            home = getenv("HOME");
+            mini->ret_value = ft_cd(home, mini);
+        }
+        else
+            mini->ret_value = ft_cd(args, mini);
+        mini->exec = 1;
+    }
+    else if (ft_strcmp(command, "pwd") == 0)
+    {
+        mini->ret_value = ft_pwd();
+        mini->exec = 1;
+    }
+    else if (ft_strcmp(command, "export") == 0)
+    {
+        args = strtok(NULL, "\n");
+        if (args == NULL)
+        {
+            mini->ret_value = ft_export(NULL, mini);
+        }
+        else
+        {
+            error = is_valid_env(args);
+            if (args[0] == '=')
+                error = -3;
+            if (error != 1)
+            {
+                print_error(error, args);
+                mini->ret_value = 1;
+            }
+            else
+                mini->ret_value = ft_export(args, mini);
+        }
+        mini->exec = 1;
+    }
+    else if (ft_strcmp(command, "unset") == 0)
+    {
+        args = strtok(NULL, "\n");
+        if (args != NULL)
+            mini->ret_value = ft_unset(args, mini);
+        else
+            mini->ret_value = 0;
+        mini->exec = 1;
+    }
+    else if (ft_strcmp(command, "env") == 0)
+    {
+        mini->ret_value = ft_env(mini);
+        mini->exec = 1;
+    }
+    else if (ft_strcmp(command, "exit") == 0)
+    {
+        args = strtok(NULL, "\n");
+        ft_exit(args);  // Note: ft_exit doesn't return
+        mini->exec = 1;
+    }
+    else if (ft_strcmp(command, "history") == 0)
+    {
+        show_history(history);
+        mini->ret_value = 0;
+        mini->exec = 1;
+    }
+    else
+    {
+        mini->ret_value = 127;  // Command not found
+        mini->exec = 0;
+    }
+
     free(line_copy);
 }
 

@@ -6,11 +6,29 @@
 #include <unistd.h>
 #include <stdio.h>
 
+char *get_prompt(int ret_value)
+{
+    char *prompt = malloc(100); // Asegúrate de liberar esta memoria después de usarla
+    if (prompt == NULL) {
+        perror("malloc");
+        exit(1);
+    }
+
+    if (ret_value == 0) {
+        snprintf(prompt, 100, "\033[1;32m→ minishell ▸ \033[0m");
+    } else {
+        snprintf(prompt, 100, "\033[1;31m→ minishell ▸ \033[0m");
+    }
+
+    return prompt;
+}
+
 int main(int argc, char **argv, char **envp)
 {
     t_minish mini;
     t_history *history;
     char *line = NULL;
+    char *prompt = NULL;
 
     (void)argc;
     (void)argv;
@@ -24,13 +42,16 @@ int main(int argc, char **argv, char **envp)
     }
     setup_signals();
     init_struct_history(history);
+
     while (mini.exit == 0)
     {
         init_path(&mini);
         sig_init();
         //setup_signals();
         //print_line(&mini);
-        line = readline("\033[1;32m→ minishell ▸ \033[0m");
+        prompt = get_prompt(mini.ret_value);
+        line = readline(prompt);
+        free(prompt);
         if (line == NULL)
             break;
         add_to_history(history, line);

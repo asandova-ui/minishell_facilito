@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/18 17:49:12 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/21 12:13:58 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,27 +82,26 @@ void				minishell(char *line, t_minish *mini, t_history *history);
 void				built_ins(char *line, t_minish *mini, t_history *history);
 int					ft_strcmp(const char *str1, const char *str2);
 void				exit_command(void);
-void				ft_env(t_minish *mini);
+int ft_env(t_minish *mini);
 int					ft_pwd(void);
 void				print_line(t_minish *mini);
 void				parse_line(char *line, t_minish *mini);
 int					quotes(char *line, int index);
 int					is_important_sep(char *line, int i);
-void ft_echo(char *line, t_minish *mini);
-void				ft_export(char *args, t_minish *mini);
+int ft_echo(char *line, t_minish *mini);
+int ft_export(char *args, t_minish *mini);
 void				free_envp(char **envp);
 char				**dup_envp(char **envp);
-void				ft_unset(char *name, t_minish *mini);
-void				remove_env_var(t_minish *mini, const char *name);
-void				add_or_update_env_var(t_minish *mini, const char *name,
-						const char *value);
+int ft_unset(char *args, t_minish *mini);
+int	remove_env_var(t_minish *mini, const char *name);
+int	add_or_update_env_var(t_minish *mini, const char *name, const char *value);
 int					is_valid_env(const char *env);
 int					print_error(int error, const char *arg);
-void				print_sorted_envp(t_minish *mini);
+int	print_sorted_envp(t_minish *mini);
 int					compare_env(const void *a, const void *b);
 void				ft_qsort(void *base, size_t nitems, size_t size,
 						int (*compar)(const void *, const void *));
-void				ft_cd(char *path, t_minish *mini);
+int ft_cd(char *path, t_minish *mini);
 int					run_command(char *line, t_minish *mini);
 extern t_sig		g_sig;
 void				sig_int(int code);

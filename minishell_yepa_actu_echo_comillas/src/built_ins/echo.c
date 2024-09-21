@@ -69,27 +69,26 @@ char *handle_quotes(const char *str) {
     return result;  // Devolver la cadena procesada
 }
 
-void ft_echo(char *line, t_minish *mini) {
+int ft_echo(char *line, t_minish *mini)
+{
     char *arg;
     int new_line = 1;
     char *env_value;
     char *processed_line;
 
-    // Procesar la línea de entrada para manejar las comillas
     processed_line = handle_quotes(line);
+    if (processed_line == NULL)
+        return 1;
 
     arg = strtok(processed_line, " \n");
-
     if (arg != NULL && strcmp(arg, "-n") == 0) {
         new_line = 0;
         arg = strtok(NULL, " \n");
     }
-
     while (arg != NULL) {
         char *current = arg;
         while (*current) {
             if (*current == '$') {
-                // Manejar variables de entorno y $? (ret_value)
                 if (*(current + 1) == '?') {
                     ft_putnbr_fd(mini->ret_value, 1);
                     current += 2;
@@ -109,7 +108,6 @@ void ft_echo(char *line, t_minish *mini) {
                     current = var_end;
                 }
             } else if (*current == '\'' || *current == '\"') {
-                // No imprimir las comillas externas balanceadas
                 char quote_char = *current;
                 current++;
                 while (*current && *current != quote_char) {
@@ -117,10 +115,9 @@ void ft_echo(char *line, t_minish *mini) {
                     current++;
                 }
                 if (*current == quote_char) {
-                    current++;  // Saltar la comilla de cierre
+                    current++;
                 }
             } else {
-                // Imprimir el contenido fuera de las comillas
                 write(1, current, 1);
                 current++;
             }
@@ -130,11 +127,11 @@ void ft_echo(char *line, t_minish *mini) {
             write(1, " ", 1);
         }
     }
-
     if (new_line)
         write(1, "\n", 1);
 
     free(processed_line);
+    return 0;
 }
 
 char *mini_getenv(t_minish *mini, const char *name) {

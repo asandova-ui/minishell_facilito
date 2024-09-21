@@ -3,41 +3,58 @@
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
 
-void	ft_unset(char *args, t_minish *mini)
+int ft_unset(char *args, t_minish *mini)
 {
-	char	*arg;
+    char *arg;
+    int ret_value = 0;
 
-	arg = strtok(args, " \n");
-	while (arg != NULL)
-	{
-		remove_env_var(mini, arg);
-		arg = strtok(NULL, " \n");
-		//init_path(mini);
-	}
+    arg = strtok(args, " \n");
+    while (arg != NULL)
+    {
+        if (is_valid_env(arg))
+        {
+            if (remove_env_var(mini, arg) != 0)
+                ret_value = 1;
+        }
+        else
+        {
+            fprintf(stderr, "unset: %s: not a valid identifier\n", arg);
+            ret_value = 1;
+        }
+        arg = strtok(NULL, " \n");
+    }
+    return ret_value;
 }
 
-void	remove_env_var(t_minish *mini, const char *name)
+int	remove_env_var(t_minish *mini, const char *name)
 {
 	int	i;
 	int	j;
 	int	name_len;
 
+	if (!mini || !mini->envp || !name) // Comprobamos si mini, envp o name son nulos
+		return 1;
+
 	i = 0;
 	name_len = ft_strlen(name);
-	while (mini->envp && mini->envp[i])
+	while (mini->envp[i])
 	{
 		if (ft_strncmp(mini->envp[i], name, name_len) == 0
 			&& mini->envp[i][name_len] == '=')
 		{
+			// Variable encontrada, procedemos a eliminarla
 			free(mini->envp[i]);
 			j = i;
 			while (mini->envp[j])
 			{
-				mini->envp[j] = mini->envp[j + 1];
+				mini->envp[j] = mini->envp[j + 1]; // Movemos los elementos
 				j++;
 			}
-			continue ;
+			return 0; // Eliminación exitosa
 		}
 		i++;
 	}
+
+	// Si no encontramos la variable de entorno
+	return 1;
 }
