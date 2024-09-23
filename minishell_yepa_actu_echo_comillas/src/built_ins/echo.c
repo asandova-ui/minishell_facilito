@@ -91,84 +91,74 @@ char	*handle_quotes(const char *str)
 int	ft_echo(char *line, t_minish *mini)
 {
 	char	*arg;
-	int		new_line;
-	char	*env_value;
+	int		new_line = 1;
 	char	*processed_line;
-	char	*current;
-	char	*var_start;
-	char	*var_end;
-	size_t	var_len;
-	char	*var_name;
-	char	quote_char;
 
-	new_line = 1;
 	processed_line = handle_quotes(line);
 	if (processed_line == NULL)
 		return (1);
+
+	// Procesa el primer argumento, si es "-n" no agregamos un salto de línea.
 	arg = strtok(processed_line, " \n");
-	if (arg != NULL && strcmp(arg, "-n") == 0)
-	{
+	if (arg == NULL) {
+		// Si no hay argumentos, imprimimos solo un salto de línea
+		write(1, "\n", 1);
+		free(processed_line);
+		return (0);
+	}
+
+	if (arg != NULL && strcmp(arg, "-n") == 0) {
 		new_line = 0;
 		arg = strtok(NULL, " \n");
 	}
-	while (arg != NULL)
-	{
-		current = arg;
-		while (*current)
-		{
-			if (*current == '$')
-			{
-				if (*(current + 1) == '?')
-				{
-					ft_putnbr_fd(mini->ret_value, 1);
-					current += 2;
-				}
-				else
-				{
-					var_start = current + 1;
-					var_end = var_start;
-					while (*var_end && (*var_end == '_' || isalnum(*var_end)))
-						var_end++;
-					var_len = var_end - var_start;
-					var_name = strndup(var_start, var_len);
-					env_value = get_env_value(var_name, mini);
-					free(var_name);
-					if (env_value)
-					{
-						write(1, env_value, strlen(env_value));
-						free(env_value);
-					}
-					current = var_end;
-				}
-			}
-			else if (*current == '\'' || *current == '\"')
-			{
-				quote_char = *current;
+
+	while (arg != NULL) {
+		char *current = arg;
+		int in_single_quote = 0;
+		int in_double_quote = 0;
+
+		while (*current) {
+			if (*current == '\'') {
+				// Ingresamos o salimos de comillas simples
+				in_single_quote = !in_single_quote;
+				write(1, current, 1);  // Imprimimos la comilla simple
 				current++;
-				while (*current && *current != quote_char)
-				{
-					write(1, current, 1);
-					current++;
-				}
-				if (*current == quote_char)
-				{
-					current++;
-				}
 			}
-			else
-			{
+			else if (*current == '\"') {
+				// Ingresamos o salimos de comillas dobles
+				in_double_quote = !in_double_quote;
+				current++;  // No imprimimos las comillas dobles
+			}
+			else if (*current == '$' && in_double_quote) {
+				// Expansión de variables dentro de comillas dobles (pero no comillas simples)
+				char *var_start = current + 1;
+				char *var_end = var_start;
+				while (*var_end && (*var_end == '_' || isalnum(*var_end)))
+					var_end++;
+				size_t var_len = var_end - var_start;
+				char *var_name = strndup(var_start, var_len);
+				char *env_value = mini_getenv(mini, var_name);
+				free(var_name);
+				if (env_value) {
+					write(1, env_value, strlen(env_value));
+				}
+				current = var_end;
+			}
+			else {
+				// Imprimimos el resto de los caracteres
 				write(1, current, 1);
 				current++;
 			}
 		}
+
 		arg = strtok(NULL, " \n");
 		if (arg != NULL)
-		{
 			write(1, " ", 1);
-		}
 	}
+
 	if (new_line)
 		write(1, "\n", 1);
+
 	free(processed_line);
 	return (0);
 }
