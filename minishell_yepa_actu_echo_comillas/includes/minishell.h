@@ -172,4 +172,5 @@ void				execute_command(char **args, t_minish *mini,
 void				close_all_pipes(t_pipeline *pipeline);
 void				free_envp(char **envp);
 char				**dup_envp(char **envp);
+char	*mini_getenv(t_minish *mini, const char *name);
 #endif
