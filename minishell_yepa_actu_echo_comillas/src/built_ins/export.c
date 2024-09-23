@@ -1,48 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/23 13:36:23 by alonso            #+#    #+#             */
+/*   Updated: 2024/09/23 13:37:16 by alonso           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
 
-int ft_export(char *args, t_minish *mini)
+int	ft_export(char *args, t_minish *mini)
 {
-    char *arg;
-    char *equal_sign;
-    char *name;
-    char *value;
-    int ret_value = 0;
+	char	*arg;
+	char	*equal_sign;
+	char	*name;
+	char	*value;
+	int		ret_value;
 
-    if (args == NULL || *args == '\0')
-    {
-        return print_sorted_envp(mini);
-    }
-    arg = strtok(args, " \n");
-    while (arg != NULL)
-    {
-        equal_sign = strchr(arg, '=');
-        if (equal_sign != NULL)
-        {
-            *equal_sign = '\0';
-            name = arg;
-            value = equal_sign + 1;
-            if (is_valid_env(name))
-            {
-                if (add_or_update_env_var(mini, name, value) != 0)
-                    ret_value = 1;
-            }
-            else
-            {
-                fprintf(stderr, "export: %s: not a valid identifier\n", name);
-                ret_value = 1;
-            }
-        }
-        else if (!is_valid_env(arg))
-        {
-            fprintf(stderr, "export: %s: not a valid identifier\n", arg);
-            ret_value = 1;
-        }
-        arg = strtok(NULL, " \n");
-    }
-    return ret_value;
+	ret_value = 0;
+	if (args == NULL || *args == '\0')
+	{
+		return (print_sorted_envp(mini));
+	}
+	arg = strtok(args, " \n");
+	while (arg != NULL)
+	{
+		equal_sign = strchr(arg, '=');
+		if (equal_sign != NULL)
+		{
+			*equal_sign = '\0';
+			name = arg;
+			value = equal_sign + 1;
+			if (is_valid_env(name))
+			{
+				if (add_or_update_env_var(mini, name, value) != 0)
+					ret_value = 1;
+			}
+			else
+			{
+				fprintf(stderr, "export: %s: not a valid identifier\n", name);
+				ret_value = 1;
+			}
+		}
+		else if (!is_valid_env(arg))
+		{
+			fprintf(stderr, "export: %s: not a valid identifier\n", arg);
+			ret_value = 1;
+		}
+		arg = strtok(NULL, " \n");
+	}
+	return (ret_value);
 }
 
 int	add_or_update_env_var(t_minish *mini, const char *name, const char *value)
@@ -51,10 +63,8 @@ int	add_or_update_env_var(t_minish *mini, const char *name, const char *value)
 	int		name_len;
 	char	**new_envp;
 
-	// Verificación de punteros nulos
 	if (!mini || !mini->envp || !name || !value)
-		return 1;
-
+		return (1);
 	i = 0;
 	name_len = ft_strlen(name);
 	while (mini->envp && mini->envp[i])
@@ -62,32 +72,26 @@ int	add_or_update_env_var(t_minish *mini, const char *name, const char *value)
 		if (ft_strncmp(mini->envp[i], name, name_len) == 0
 			&& mini->envp[i][name_len] == '=')
 		{
-			// Reemplazar la variable existente
 			free(mini->envp[i]);
 			mini->envp[i] = malloc(name_len + ft_strlen(value) + 2);
-			if (!mini->envp[i]) // Verificamos el resultado del malloc
-				return 1;
+			if (!mini->envp[i])
+				return (1);
 			sprintf(mini->envp[i], "%s=%s", name, value);
-			return 0; // Ejecución correcta al actualizar
+			return (0);
 		}
 		i++;
 	}
-
-	// Añadir nueva variable
 	new_envp = realloc(mini->envp, (i + 2) * sizeof(char *));
-	if (!new_envp) // Verificamos el resultado de realloc
-		return 1;
+	if (!new_envp)
+		return (1);
 	mini->envp = new_envp;
-
 	mini->envp[i] = malloc(name_len + ft_strlen(value) + 2);
-	if (!mini->envp[i]) // Verificamos el resultado del malloc
-		return 1;
+	if (!mini->envp[i])
+		return (1);
 	sprintf(mini->envp[i], "%s=%s", name, value);
 	mini->envp[i + 1] = NULL;
-
-	return 0; // Ejecución correcta al agregar
+	return (0);
 }
-
 
 int	is_valid_env(const char *env)
 {
@@ -124,18 +128,14 @@ int	print_sorted_envp(t_minish *mini)
 	int		i;
 	int		env_count;
 
-	// Comprobamos si mini o mini->envp son nulos
 	if (!mini || !mini->envp)
-		return 1;
-
+		return (1);
 	env_count = 0;
 	while (mini->envp[env_count])
 		env_count++;
-
 	sorted_envp = malloc((env_count + 1) * sizeof(char *));
-	if (!sorted_envp) // Si falla el malloc, devolvemos 1
-		return 1;
-
+	if (!sorted_envp)
+		return (1);
 	i = 0;
 	while (i < env_count)
 	{
@@ -143,20 +143,16 @@ int	print_sorted_envp(t_minish *mini)
 		i++;
 	}
 	sorted_envp[env_count] = NULL;
-
 	ft_qsort(sorted_envp, env_count, sizeof(char *), compare_env);
-
 	i = 0;
 	while (i < env_count)
 	{
 		printf("declare -x %s\n", sorted_envp[i]);
 		i++;
 	}
-
 	free(sorted_envp);
-	return 0; // Ejecución correcta
+	return (0);
 }
-
 
 int	compare_env(const void *a, const void *b)
 {

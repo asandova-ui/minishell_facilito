@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/23 12:23:34 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/23 14:19:47 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ typedef struct s_minish
 	int				env_exist;
 	int				comillas;
 	int				exec;
+	pid_t           pid;
+    int             redisplay_prompt;
 }					t_minish;
 
 typedef struct s_token
@@ -100,7 +102,6 @@ typedef struct s_env_var
 	char			*new_r;
 }					t_env_var;
 
-extern t_sig		g_sig;
 extern t_minish		*g_mini;
 
 typedef struct s_history
@@ -112,7 +113,7 @@ typedef struct s_history
 
 void				init_path(t_minish *mini);
 void				init_struct(t_minish *mini, char **envp);
-void				minishell(char *line, t_minish *mini, t_history *history);
+int	minishell(t_minish *mini, t_history *history);
 void				built_ins(char *line, t_minish *mini, t_history *history);
 int					ft_strcmp(const char *str1, const char *str2);
 void				exit_command(void);
@@ -138,7 +139,7 @@ void				ft_qsort(void *base, size_t nitems, size_t size,
 int					ft_cd(char *path, t_minish *mini);
 int					run_command(char *line, t_minish *mini);
 void				sig_int(int code);
-void				sig_init(void);
+//void				sig_init(void);
 void				ft_exit(char *args);
 char				*ft_strndup(const char *s, size_t n);
 char				*ft_strncpy(char *dest, const char *src, size_t n);

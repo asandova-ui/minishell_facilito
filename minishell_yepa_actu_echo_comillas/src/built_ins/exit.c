@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/23 13:36:07 by alonso            #+#    #+#             */
+/*   Updated: 2024/09/23 13:36:13 by alonso           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../printf/includes/ft_printf.h"
@@ -8,11 +18,13 @@ void	ft_exit(char *args)
 {
 	char	*arg;
 	int		exit_value;
+	int		num_args;
+	char	*temp_args;
 
 	if (args == NULL || *args == '\0')
-		exit(	EXIT_SUCCESS);
-	int num_args = 0;
-	char *temp_args = strdup(args);
+		exit(EXIT_SUCCESS);
+	num_args = 0;
+	temp_args = strdup(args);
 	if (!temp_args)
 	{
 		perror("strdup");
@@ -28,10 +40,11 @@ void	ft_exit(char *args)
 	if (num_args > 1)
 	{
 		fprintf(stderr, "exit\nbash: exit: too many arguments\n");
-		return;
+		return ;
 	}
 	if (!is_valid_number(args))
-		fprintf(stderr, "exit\nbash: exit: %s: numeric argument required\n", args);
+		fprintf(stderr, "exit\nbash: exit: %s: numeric argument required\n",
+			args);
 	else
 	{
 		exit_value = ft_atoi(args);

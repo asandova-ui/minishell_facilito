@@ -6,13 +6,15 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:48:45 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/23 12:19:29 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/23 14:55:29 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../printf/includes/ft_printf.h"
 #include "../printf/libft/libft.h"
+
+t_minish *g_mini;
 
 char	*get_prompt(int ret_value)
 {
@@ -39,11 +41,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minish	mini;
 	t_history	*history;
-	char		*line;
-	char		*prompt;
 
-	line = NULL;
-	prompt = NULL;
 	(void)argc;
 	(void)argv;
 	init_struct(&mini, envp);
@@ -58,38 +56,57 @@ int	main(int argc, char **argv, char **envp)
 	init_struct_history(history);
 	while (mini.exit == 0)
 	{
-		init_path(&mini);
-		sig_init();
-		prompt = get_prompt(mini.ret_value);
-		line = readline(prompt);
-		free(prompt);
-		if (line == NULL)
+		if (minishell(&mini, history))
 			break ;
-		add_to_history(history, line);
-		minishell(line, &mini, history);
-		free(line);
-		line = NULL;
-		if (mini.path)
-		{
-			free_paths(mini.path);
-			mini.path = NULL;
-		}
+		mini.exec = 0;
 	}
 	free_history(history);
 	free_envp(mini.envp);
 	exit(EXIT_SUCCESS);
 }
 
-void	minishell(char *line, t_minish *mini, t_history *history)
+int	minishell(t_minish *mini, t_history *history)
 {
 	char	*temp;
+	char	*line;
+	char	*prompt;
 
+	init_path(mini);
+	//sig_init();
+	//prompt = get_prompt(mini->ret_value);
+	prompt= "\033[1;32m→ minishell ▸ \033[0m";
+	line = readline(prompt);
+	//free(prompt);
+    if (line == NULL)
+    {
+        if (isatty(STDIN_FILENO))
+            write(STDOUT_FILENO, "exit\n", 5);
+		free(line);
+        return 1;
+    }
+	if (line == NULL)
+		return (1);
+	add_to_history(history, line);
 	temp = ft_strdup2(line);
 	built_ins(temp, mini, history);
 	if (mini->exec == 0)
 		mini->ret_value = run_command(line, mini);
 	free(temp);
-	mini->exec = 0;
+	free(line);
+	line = NULL;
+	if (mini->path)
+	{
+		free_paths(mini->path);
+		mini->path = NULL;
+	}
+	if (mini->redisplay_prompt)
+    {
+        rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay();
+        mini->redisplay_prompt = 0;
+    }
+	return (0);
 }
 
 void	add_to_history(t_history *history, char *command)
@@ -108,7 +125,7 @@ void	add_to_history(t_history *history, char *command)
 		while (i < 1000)
 		{
 			history->history[i - 1] = history->history[i];
-			i ++;
+			i++;
 		}
 		history->history[999] = strdup(command);
 	}
@@ -123,6 +140,8 @@ void	init_struct(t_minish *mini, char **envp)
 	mini->envp = NULL;
 	mini->env_exist = 0;
 	mini->exec = 0;
+	mini->pid = 0;
+	mini->redisplay_prompt = 0;
 	if (envp)
 		mini->envp = dup_envp(envp);
 	else
