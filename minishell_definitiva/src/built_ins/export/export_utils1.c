@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 00:45:20 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/24 01:08:50 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/24 10:00:47 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../../../printf/includes/ft_printf.h"
 #include "../../../printf/libft/libft.h"
 
-void	init_export_sorted_env_state(SortedEnvState *state, t_minish *mini)
+void	init_export_sorted_env_state(t_sortedEnvState *state, t_minish *mini)
 {
 	state->env_count = 0;
 	while (mini->envp[state->env_count])
@@ -22,7 +22,7 @@ void	init_export_sorted_env_state(SortedEnvState *state, t_minish *mini)
 	state->sorted_envp = malloc((state->env_count + 1) * sizeof(char *));
 }
 
-void	copy_and_sort_export_env(SortedEnvState *state, t_minish *mini)
+void	copy_and_sort_export_env(t_sortedEnvState *state, t_minish *mini)
 {
 	int	i;
 
@@ -39,8 +39,8 @@ void	copy_and_sort_export_env(SortedEnvState *state, t_minish *mini)
 
 int	print_export_sorted_envp(t_minish *mini)
 {
-	SortedEnvState	state;
-	int				i;
+	t_sortedEnvState	state;
+	int					i;
 
 	if (!mini || !mini->envp)
 		return (1);

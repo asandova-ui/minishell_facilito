@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 18:55:09 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/23 19:01:24 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/24 09:56:10 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 #include "../../../printf/includes/ft_printf.h"
 #include "../../../printf/libft/libft.h"
 
-void	initialize_exit_state(ExitState *state, char *args)
+void	initialize_exit_state(t_exitState *state, char *args)
 {
 	state->args = args;
 	state->num_args = 0;
 	state->exit_value = EXIT_SUCCESS;
 }
 
-void	handle_empty_args(ExitState *state)
+void	handle_empty_args(t_exitState *state)
 {
 	if (state->args == NULL || *(state->args) == '\0')
 	{
@@ -52,7 +52,7 @@ int	count_args(char *args)
 	return (count);
 }
 
-void	handle_too_many_args(ExitState *state)
+void	handle_too_many_args(t_exitState *state)
 {
 	if (state->num_args > 1)
 	{
@@ -61,7 +61,7 @@ void	handle_too_many_args(ExitState *state)
 	}
 }
 
-void	process_exit_arg(ExitState *state)
+void	process_exit_arg(t_exitState *state)
 {
 	if (!is_valid_number(state->args))
 	{

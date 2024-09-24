@@ -6,21 +6,13 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:48:35 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/23 12:00:52 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/24 09:43:36 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../printf/includes/ft_printf.h"
 #include "../printf/libft/libft.h"
-
-void	init_redirection(t_redirection *red)
-{
-	red->infile = NULL;
-	red->outfile = NULL;
-	red->heredoc_delim = NULL;
-	red->append_mode = 0;
-}
 
 void	free_redirection(t_redirection *red)
 {
@@ -61,30 +53,36 @@ void	add_argument(char ***args, int *arg_count, char *token)
 	(*args)[(*arg_count)++] = ft_strdup(token);
 }
 
+void	process_token(t_parse_data *data, t_redirection *red)
+{
+	if (ft_strcmp(data->token, "<") == 0 || ft_strcmp(data->token, ">") == 0
+		|| ft_strcmp(data->token, ">>") == 0 || ft_strcmp(data->token,
+			"<<") == 0)
+	{
+		data->file = strtok_r(NULL, " \t", &data->rest);
+		if (data->file)
+			handle_redirection(data->token, data->file, red);
+	}
+	else
+		add_argument(&data->args, &data->arg_count, data->token);
+}
+
 char	**parse_command(char *cmd, t_redirection *red)
 {
-	char	**args;
-	int		arg_count;
-	char	*token;
-	char	*rest;
-	char	*file;
+	t_parse_data	data;
 
-	args = NULL;
-	arg_count = 0;
-	rest = cmd;
-	while ((token = strtok_r(rest, " \t", &rest)))
+	data.args = NULL;
+	data.arg_count = 0;
+	data.token = 0;
+	data.rest = cmd;
+	data.file = NULL;
+	data.token = strtok_r(data.rest, " \t", &data.rest);
+	while (data.token)
 	{
-		if (ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0
-			|| ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0)
-		{
-			file = strtok_r(NULL, " \t", &rest);
-			if (file)
-				handle_redirection(token, file, red);
-		}
-		else
-			add_argument(&args, &arg_count, token);
+		process_token(&data, red);
+		data.token = strtok_r(NULL, " \t", &data.rest);
 	}
-	if (args)
-		args[arg_count] = NULL;
-	return (args);
+	if (data.args)
+		data.args[data.arg_count] = NULL;
+	return (data.args);
 }

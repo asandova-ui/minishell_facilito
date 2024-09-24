@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:34:43 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 03:02:53 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/24 09:51:14 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 int	ft_echo(char *line, t_minish *mini)
 {
-	EchoState	state;
+	t_echoState	state;
 
 	initialize_echo_state(&state, line, mini);
 	if (state.processed_line == NULL)

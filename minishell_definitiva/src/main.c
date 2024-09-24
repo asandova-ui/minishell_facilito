@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:48:45 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 02:26:30 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/24 09:58:38 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../printf/includes/ft_printf.h"
 #include "../printf/libft/libft.h"
 
-t_minish *g_mini;
+t_minish	*g_mini;
 
 char	*get_prompt(int ret_value)
 {
@@ -72,18 +72,18 @@ int	minishell(t_minish *mini, t_history *history)
 	char	*prompt;
 
 	init_path(mini);
-	//sig_init();
-	//prompt = get_prompt(mini->ret_value);
-	prompt= "\033[1;32m→ minishell ▸ \033[0m";
+	// sig_init();
+	// prompt = get_prompt(mini->ret_value);
+	prompt = "\033[1;32m→ minishell ▸ \033[0m";
 	line = readline(prompt);
-	//free(prompt);
-    if (line == NULL)
-    {
-        if (isatty(STDIN_FILENO))
-            write(STDOUT_FILENO, "exit\n", 5);
+	// free(prompt);
+	if (line == NULL)
+	{
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "exit\n", 5);
 		free(line);
-        return 1;
-    }
+		return (1);
+	}
 	if (line == NULL)
 		return (1);
 	add_to_history(history, line);
@@ -100,12 +100,12 @@ int	minishell(t_minish *mini, t_history *history)
 		mini->path = NULL;
 	}
 	if (mini->redisplay_prompt)
-    {
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();
-        mini->redisplay_prompt = 0;
-    }
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		mini->redisplay_prompt = 0;
+	}
 	return (0);
 }
 

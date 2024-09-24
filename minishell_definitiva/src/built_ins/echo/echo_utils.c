@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 18:43:58 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/23 18:44:15 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/24 09:57:46 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../../../printf/includes/ft_printf.h"
 #include "../../../printf/libft/libft.h"
 
-int	handle_empty_arg(EchoState *state)
+int	handle_empty_arg(t_echoState *state)
 {
 	if (state->arg == NULL)
 	{
@@ -25,7 +25,7 @@ int	handle_empty_arg(EchoState *state)
 	return (1);
 }
 
-void	handle_n_flag(EchoState *state)
+void	handle_n_flag(t_echoState *state)
 {
 	if (strcmp(state->arg, "-n") == 0)
 	{
@@ -34,7 +34,7 @@ void	handle_n_flag(EchoState *state)
 	}
 }
 
-void	process_variable(EchoQuoteState *qstate, EchoState *estate)
+void	process_variable(t_echoQuoteState *qstate, t_echoState *estate)
 {
 	char	*var_start;
 	char	*var_end;
@@ -57,7 +57,7 @@ void	process_variable(EchoQuoteState *qstate, EchoState *estate)
 	qstate->current = var_end;
 }
 
-void	process_current_char(EchoQuoteState *qstate)
+void	process_current_char(t_echoQuoteState *qstate)
 {
 	if (*qstate->current == '\'')
 	{
@@ -77,9 +77,9 @@ void	process_current_char(EchoQuoteState *qstate)
 	}
 }
 
-void	process_arg(EchoState *estate)
+void	process_arg(t_echoState *estate)
 {
-	EchoQuoteState	qstate;
+	t_echoQuoteState	qstate;
 
 	qstate.current = estate->arg;
 	qstate.in_single_quote = 0;

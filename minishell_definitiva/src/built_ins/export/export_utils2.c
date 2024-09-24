@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 00:52:51 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/24 00:52:54 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/24 09:59:59 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../../../printf/includes/ft_printf.h"
 #include "../../../printf/libft/libft.h"
 
-int	update_existing_export_env_var(EnvVarState *state, int i, int name_len)
+int	update_existing_export_env_var(t_envVarState *state, int i, int name_len)
 {
 	free(state->mini->envp[i]);
 	state->mini->envp[i] = malloc(name_len + ft_strlen(state->value) + 2);
@@ -24,7 +24,7 @@ int	update_existing_export_env_var(EnvVarState *state, int i, int name_len)
 	return (0);
 }
 
-int	add_new_export_env_var(EnvVarState *state, int i, int name_len)
+int	add_new_export_env_var(t_envVarState *state, int i, int name_len)
 {
 	char	**new_envp;
 
@@ -43,9 +43,9 @@ int	add_new_export_env_var(EnvVarState *state, int i, int name_len)
 int	add_or_update_export_env_var(t_minish *mini, const char *name,
 		const char *value)
 {
-	EnvVarState	state;
-	int			i;
-	int			name_len;
+	t_envVarState	state;
+	int				i;
+	int				name_len;
 
 	init_export_env_var_state(&state, mini, name, value);
 	if (!state.mini || !state.mini->envp || !state.name || !state.value)

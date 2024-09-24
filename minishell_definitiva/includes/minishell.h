@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/24 03:25:45 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:20:11 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,64 +112,64 @@ typedef struct s_history
 	int				i;
 }					t_history;
 
-typedef struct
+typedef struct s_QuoteState
 {
 	char			*result;
 	const char		*start;
 	int				in_single_quote;
 	int				in_double_quote;
-}					QuoteState;
+}					t_quoteState;
 
-typedef struct
+typedef struct s_EchoState
 {
 	char			*processed_line;
 	char			*arg;
 	int				new_line;
 	t_minish		*mini;
-}					EchoState;
+}					t_echoState;
 
-typedef struct
+typedef struct s_EchoQuoteState
 {
 	char			*current;
 	int				in_single_quote;
 	int				in_double_quote;
-}					EchoQuoteState;
+}					t_echoQuoteState;
 
-typedef struct
+typedef struct s_ExitState
 {
 	char			*args;
 	int				num_args;
 	int				exit_value;
-}					ExitState;
+}					t_exitState;
 
-typedef struct
+typedef struct s_ExportState
 {
 	char			*args;
 	t_minish		*mini;
 	int				ret_value;
-}					ExportState;
+}					t_exportState;
 
-typedef struct
+typedef struct s_EnvVarState
 {
 	t_minish		*mini;
 	const char		*name;
 	const char		*value;
-}					EnvVarState;
+}					t_envVarState;
 
-typedef struct
+typedef struct s_SortedEnvState
 {
 	char			**sorted_envp;
 	int				env_count;
-}					SortedEnvState;
+}					t_sortedEnvState;
 
-typedef struct
+typedef struct s_qsort_ctx
 {
 	void			*base;
 	size_t			size;
 	int				(*compar)(const void *, const void *);
 }					t_qsort_ctx;
 
-typedef struct
+typedef struct s_cd_ctx
 {
 	char			cwd[PATH_MAX];
 	char			*oldpwd;
@@ -183,6 +183,15 @@ typedef struct s_cmd_ctx
 	char			*command;
 	char			*args;
 }					t_cmd_ctx;
+
+typedef struct s_parse_data
+{
+	char			**args;
+	int				arg_count;
+	char			*token;
+	char			*rest;
+	char			*file;
+}					t_parse_data;
 
 void				init_path(t_minish *mini);
 void				init_struct(t_minish *mini, char **envp);
@@ -246,27 +255,33 @@ void				close_all_pipes(t_pipeline *pipeline);
 void				free_envp(char **envp);
 char				**dup_envp(char **envp);
 char				*mini_getenv(t_minish *mini, const char *name);
-void				process_quotes(QuoteState *state, int is_append);
-void				handle_incomplete_quotes(QuoteState *state);
-int					handle_empty_arg(EchoState *state);
-void				handle_n_flag(EchoState *state);
-void				process_variable(EchoQuoteState *qstate, EchoState *estate);
-void				process_current_char(EchoQuoteState *qstate);
-void				process_arg(EchoState *estate);
-void				initialize_echo_state(EchoState *state, char *line,
+void				process_quotes(t_quoteState *state, int is_append);
+void				handle_incomplete_quotes(t_quoteState *state);
+int					handle_empty_arg(t_echoState *state);
+void				handle_n_flag(t_echoState *state);
+void				process_variable(t_echoQuoteState *qstate,
+						t_echoState *estate);
+void				process_current_char(t_echoQuoteState *qstate);
+void				process_arg(t_echoState *estate);
+void				initialize_echo_state(t_echoState *state, char *line,
 						t_minish *mini);
-void				initialize_exit_state(ExitState *state, char *args);
-void				handle_empty_args(ExitState *state);
+void				initialize_exit_state(t_exitState *state, char *args);
+void				handle_empty_args(t_exitState *state);
 int					count_args(char *args);
-void				handle_too_many_args(ExitState *state);
-void				process_exit_arg(ExitState *state);
+void				handle_too_many_args(t_exitState *state);
+void				process_exit_arg(t_exitState *state);
 int					print_export_sorted_envp(t_minish *mini);
 int					is_valid_export_env(const char *env);
 int					add_or_update_export_env_var(t_minish *mini,
 						const char *name, const char *value);
 int					compare_export_env(const void *a, const void *b);
 int					print_export_error(int error, const char *arg);
-void				init_export_env_var_state(EnvVarState *state,
+void				init_export_env_var_state(t_envVarState *state,
 						t_minish *mini, const char *name, const char *value);
 void				handle_unset(t_cmd_ctx *ctx, t_minish *mini);
+void				free_args(char **args);
+void				init_command_context(t_command_context *ctx, char *line,
+						t_minish *mini);
+void				init_env_var(t_env_var *env_var);
+void				cleanup_command_context(t_command_context *ctx);
 #endif

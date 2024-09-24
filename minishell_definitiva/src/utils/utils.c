@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 12:12:06 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/23 12:12:28 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/24 09:43:38 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,19 @@ void	init_struct_history(t_history *history)
 		history->history[j] = NULL;
 		j++;
 	}
+}
+
+void	init_env_var(t_env_var *env_var)
+{
+	env_var->name = NULL;
+	env_var->value = NULL;
+	env_var->var_len = 0;
+}
+
+void	init_redirection(t_redirection *red)
+{
+	red->infile = NULL;
+	red->outfile = NULL;
+	red->heredoc_delim = NULL;
+	red->append_mode = 0;
 }

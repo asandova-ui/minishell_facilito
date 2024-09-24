@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   getenv_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 18:45:15 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/23 18:45:33 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/24 09:51:14 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*ft_strncpy(char *dest, const char *src, size_t n)
 	return (dest);
 }
 
-void	initialize_echo_state(EchoState *state, char *line, t_minish *mini)
+void	initialize_echo_state(t_echoState *state, char *line, t_minish *mini)
 {
 	state->processed_line = handle_quotes(line);
 	state->new_line = 1;

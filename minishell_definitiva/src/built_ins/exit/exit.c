@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:36:07 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/23 19:01:19 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/24 09:55:53 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void	ft_exit(char *args)
 {
-	ExitState	state;
+	t_exitState	state;
 
 	initialize_exit_state(&state, args);
 	handle_empty_args(&state);
