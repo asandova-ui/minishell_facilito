@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:34:43 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 09:51:14 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/25 05:34:27 by jamorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,37 @@ int	ft_echo(char *line, t_minish *mini)
 		write(1, "\n", 1);
 	free(state.processed_line);
 	return (0);
+}
+
+char	*processs_quotes(t_quote_state *state, char *result)
+{
+	char	*extra_input;
+	int		is_first_input;
+
+	is_first_input = 1;
+	while (state->in_single_quote || state->in_double_quote)
+	{
+		printf("quote> ");
+		extra_input = readline(NULL);
+		if (!extra_input)
+			break ;
+		result = allocate_new_result(result, extra_input, is_first_input);
+		append_input(&result, extra_input, is_first_input);
+		is_first_input = 0;
+		update_quote_state(extra_input, state);
+		free(extra_input);
+	}
+	return (result);
+}
+
+char	*handle_quotes(const char *str)
+{
+	t_quote_state	state;
+	char			*result;
+
+	state.in_single_quote = 0;
+	state.in_double_quote = 0;
+	result = initialize_result(str);
+	update_quote_state(str, &state);
+	return (processs_quotes(&state, result));
 }
