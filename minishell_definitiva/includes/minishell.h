@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/24 14:20:11 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/25 05:36:06 by jamorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,12 @@ typedef struct s_parse_data
 	char			*file;
 }					t_parse_data;
 
+typedef struct s_quote_state
+{
+	int				in_single_quote;
+	int				in_double_quote;
+}					t_quote_state;
+
 void				init_path(t_minish *mini);
 void				init_struct(t_minish *mini, char **envp);
 int					minishell(t_minish *mini, t_history *history);
@@ -284,4 +290,12 @@ void				init_command_context(t_command_context *ctx, char *line,
 						t_minish *mini);
 void				init_env_var(t_env_var *env_var);
 void				cleanup_command_context(t_command_context *ctx);
+void				update_quote_state(const char *str, t_quote_state *state);
+size_t				calculate_new_length(const char *result,
+						const char *extra_input, int is_first_input);
+char				*allocate_new_result(char *result, const char *extra_input,
+						int is_first_input);
+void				append_input(char **result, const char *extra_input,
+						int is_first_input);
+char				*initialize_result(const char *str);
 #endif
