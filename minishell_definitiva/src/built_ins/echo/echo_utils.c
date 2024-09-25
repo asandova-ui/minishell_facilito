@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 18:43:58 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/24 09:57:46 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/25 06:19:18 by jamorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,21 @@ void	process_arg(t_echoState *estate)
 	qstate.in_double_quote = 0;
 	while (*qstate.current)
 	{
-		if (*qstate.current == '$' && qstate.in_double_quote)
+		if (*qstate.current == '\'' && !qstate.in_double_quote)
 		{
+			qstate.in_single_quote = !qstate.in_single_quote;
+			write(1, qstate.current, 1);
+		}
+		else if (*qstate.current == '\"' && !qstate.in_single_quote)
+		{
+			qstate.in_double_quote = !qstate.in_double_quote;
+			qstate.current++;
+			continue ;
+		}
+		else if (*qstate.current == '$' && (qstate.in_double_quote
+				|| !qstate.in_single_quote))
 			process_variable(&qstate, estate);
-		}
 		else
-		{
 			process_current_char(&qstate);
-		}
 	}
 }
