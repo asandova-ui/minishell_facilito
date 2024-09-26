@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 12:42:28 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 14:03:14 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/26 16:33:03 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,11 @@ char	*replace_env_var(const char *str, char *start, t_env_var *env_var,
 	prefix_len = start - str;
 	suffix_len = strlen(start + env_var->var_len + 1);
 	env_var->value = get_env_value(env_var->name, mini);
+	// printf("VALOR======  %s\n", env_var->value);
 	replacement = env_var->value ? env_var->value : "";
 	new_len = prefix_len + strlen(replacement) + suffix_len + 1;
 	result = malloc(new_len);
+	// printf("VALOR======  %s\n", env_var->value);
 	if (result)
 	{
 		strncpy(result, str, prefix_len);
@@ -72,6 +74,8 @@ char	*replace_env_var(const char *str, char *start, t_env_var *env_var,
 	}
 	if (env_var->value)
 		free(env_var->value);
+	// printf("VALOR======  %s-\n", result);
+	// printf("%s\n", result);
 	return (result);
 }
 
@@ -105,17 +109,61 @@ char	*process_env_vars(char *str, char *current, t_env_var *env_var,
 	return (result);
 }
 
-char	*expand_env_vars(char *str, t_minish *mini)
+char *expand_env_vars(char *str, t_minish *mini)
 {
-	t_env_var	env_var;
-	char		*result;
-	char		*current;
+    t_env_var env_var;
+    char *result;
+    char *current;
+    int in_single_quote = 0;
+    int i, j;
+    int should_expand = 1;
 
-	init_env_var(&env_var);
-	result = str;
-	current = find_next_env_var(result, &env_var);
-	result = process_env_vars(str, current, &env_var, mini);
-	if (result == str)
-		return (ft_strdup(str));
-	return (result);
+    init_env_var(&env_var);
+    result = ft_strdup(str);
+    if (!result)
+        return NULL;
+
+    // Primero, revisamos si hay comillas simples
+    for (i = 0; result[i]; i++)
+    {
+        if (result[i] == '\'')
+        {
+            in_single_quote = !in_single_quote;
+            should_expand = 0;
+            break;
+        }
+    }
+
+    // Si hay comillas simples, las eliminamos sin expandir
+    if (!should_expand)
+    {
+        for (i = 0, j = 0; result[i]; i++)
+        {
+            if (result[i] != '\'')
+            {
+                result[j++] = result[i];
+            }
+        }
+        result[j] = '\0';
+        return result;
+    }
+
+    // Si no hay comillas simples, procedemos con la expansión normal
+    current = find_next_env_var(result, &env_var);
+    if (current)
+    {
+        char *processed = process_env_vars(result, current, &env_var, mini);
+        if (processed)
+        {
+            free(result);
+            result = processed;
+        }
+        else
+        {
+            free(result);
+            return NULL;
+        }
+    }
+
+    return result;
 }

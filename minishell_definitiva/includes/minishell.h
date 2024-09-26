@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/25 05:36:06 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/26 12:04:01 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,10 @@ char				*ft_strjoin_3args(char const *s1, char connector,
 						char const *s2);
 char				*get_env_value(const char *name, t_minish *mini);
 char				*handle_quotes(const char *str);
+
 char				*expand_env_vars(char *str, t_minish *mini);
+//char *expand_env_vars(const char *line, t_minish *mini);
+
 char				*trim_whitespace(char *str);
 char				**parse_command(char *cmd, t_redirection *red);
 void				handle_heredoc(t_redirection *red);
