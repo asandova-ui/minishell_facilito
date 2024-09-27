@@ -109,61 +109,61 @@ char	*process_env_vars(char *str, char *current, t_env_var *env_var,
 	return (result);
 }
 
-char *expand_env_vars(char *str, t_minish *mini)
+char	*expand_env_vars(char *str, t_minish *mini)
 {
-    t_env_var env_var;
-    char *result;
-    char *current;
-    int in_single_quote = 0;
-    int i, j;
-    int should_expand = 1;
+	t_env_var env_var;
+	char *result;
+	char *current;
+	int in_single_quote = 0;
+	int i, j;
+	int should_expand = 1;
 
-    init_env_var(&env_var);
-    result = ft_strdup(str);
-    if (!result)
-        return NULL;
+	init_env_var(&env_var);
+	result = ft_strdup(str);
+	if (!result)
+		return (NULL);
 
-    // Primero, revisamos si hay comillas simples
-    for (i = 0; result[i]; i++)
-    {
-        if (result[i] == '\'')
-        {
-            in_single_quote = !in_single_quote;
-            should_expand = 0;
-            break;
-        }
-    }
+	// Primero, revisamos si hay comillas simples
+	for (i = 0; result[i]; i++)
+	{
+		if (result[i] == '\'')
+		{
+			in_single_quote = !in_single_quote;
+			should_expand = 0;
+			break ;
+		}
+	}
 
-    // Si hay comillas simples, las eliminamos sin expandir
-    if (!should_expand)
-    {
-        for (i = 0, j = 0; result[i]; i++)
-        {
-            if (result[i] != '\'')
-            {
-                result[j++] = result[i];
-            }
-        }
-        result[j] = '\0';
-        return result;
-    }
+	// Si hay comillas simples, las eliminamos sin expandir
+	if (!should_expand)
+	{
+		for (i = 0, j = 0; result[i]; i++)
+		{
+			if (result[i] != '\'')
+			{
+				result[j++] = result[i];
+			}
+		}
+		result[j] = '\0';
+		return (result);
+	}
 
-    // Si no hay comillas simples, procedemos con la expansión normal
-    current = find_next_env_var(result, &env_var);
-    if (current)
-    {
-        char *processed = process_env_vars(result, current, &env_var, mini);
-        if (processed)
-        {
-            free(result);
-            result = processed;
-        }
-        else
-        {
-            free(result);
-            return NULL;
-        }
-    }
+	// Si no hay comillas simples, procedemos con la expansión normal
+	current = find_next_env_var(result, &env_var);
+	if (current)
+	{
+		char *processed = process_env_vars(result, current, &env_var, mini);
+		if (processed)
+		{
+			free(result);
+			result = processed;
+		}
+		else
+		{
+			free(result);
+			return (NULL);
+		}
+	}
 
-    return result;
+	return (result);
 }
