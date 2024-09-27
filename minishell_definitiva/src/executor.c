@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 12:06:54 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/26 14:41:56 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/27 16:25:51 by asandova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,51 +59,18 @@ void	execute_single_command(t_command_context *ctx)
 	free_args(args);
 }
 
-/*char* parse_command_quotes(const char* command)
-{
-    int len = strlen(command);
-    char* result = malloc(len + 1);  // +1 for null terminator
-    int result_index = 0;
-    bool in_single_quotes = false;
-    bool in_double_quotes = false;
-    bool last_char_was_space = true;  // To handle leading spaces
-
-    for (int i = 0; i < len; i++) {
-        char c = command[i];
-
-        if (c == '\'' && !in_double_quotes) {
-            in_single_quotes = !in_single_quotes;
-        } else if (c == '"' && !in_single_quotes) {
-            in_double_quotes = !in_double_quotes;
-        } else if (c == ' ' && !in_single_quotes && !in_double_quotes) {
-            if (!last_char_was_space) {
-                result[result_index++] = c;
-                last_char_was_space = true;
-            }
-        } else {
-            result[result_index++] = c;
-            last_char_was_space = false;
-        }
-    }
-
-    // Trim trailing space if exists
-    if (result_index > 0 && result[result_index - 1] == ' ') {
-        result_index--;
-    }
-
-    result[result_index] = '\0';
-    return result;
-}*/
-
 char* parse_command_quotes(const char* command) {
+    // Si el comando empieza con comillas simples o dobles, devolver tal cual
+    if (command[0] == '\'' || command[0] == '"') {
+        return strdup(command);  // Retorna una copia del comando original
+    }
+
     int len = strlen(command);
-    char* result = malloc(len + 1);  // +1 for null terminator
+    char* result = malloc(len + 1);
     int result_index = 0;
     bool in_single_quotes = false;
     bool in_double_quotes = false;
-    bool last_char_was_space = true;  // To handle leading spaces
-
-    // Detect if the command starts with "/bin/echo "
+    bool last_char_was_space = true;
     bool is_echo_command = (strncmp(command, "/bin/echo ", 10) == 0);
 
     for (int i = 0; i < len; i++) {
@@ -112,20 +79,19 @@ char* parse_command_quotes(const char* command) {
         if (c == '\'' && !in_double_quotes) {
             in_single_quotes = !in_single_quotes;
             if (is_echo_command && command[i + 1] == '$') {
-                // Keep single quotes around variables when echoing '$var'
+                // Mantener comillas simples alrededor de variables para echo '$var'
                 result[result_index++] = c;
             } else if (!in_single_quotes) {
-                // If closing single quote, append it to result
+                // Si es una comilla simple de cierre, agregarla al resultado
                 result[result_index++] = c;
             }
         } else if (c == '"' && !in_single_quotes) {
             in_double_quotes = !in_double_quotes;
             if (!in_double_quotes && is_echo_command && command[i + 1] == '$') {
-                // Remove double quotes around variables for echo "$var"
+                // Eliminar comillas dobles alrededor de variables para echo "$var"
                 continue;
             }
         } else if (c == ' ' && !in_single_quotes && !in_double_quotes) {
-            // Handle spaces outside quotes
             if (!last_char_was_space) {
                 result[result_index++] = c;
                 last_char_was_space = true;
@@ -136,7 +102,6 @@ char* parse_command_quotes(const char* command) {
         }
     }
 
-    // Trim trailing space if exists
     if (result_index > 0 && result[result_index - 1] == ' ') {
         result_index--;
     }
@@ -144,6 +109,7 @@ char* parse_command_quotes(const char* command) {
     result[result_index] = '\0';
     return result;
 }
+
 
 
 int	run_command(char *line, t_minish *mini)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_vars.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 12:42:28 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/26 16:33:03 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/27 16:38:36 by asandova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ char	*find_next_env_var(char *start, t_env_var *env_var)
 	if (!dollar)
 		return (NULL);
 	env_var->var_len = 0;
+	if (dollar[1] == '?')
+	{
+		env_var->var_len = 1;
+		env_var->name = ft_strdup("?");
+		return (dollar);
+	}
 	while (dollar[env_var->var_len + 1] && (isalnum(dollar[env_var->var_len
 				+ 1]) || dollar[env_var->var_len + 1] == '_'))
 	{
@@ -59,12 +65,24 @@ char	*replace_env_var(const char *str, char *start, t_env_var *env_var,
 
 	prefix_len = start - str;
 	suffix_len = strlen(start + env_var->var_len + 1);
-	env_var->value = get_env_value(env_var->name, mini);
-	// printf("VALOR======  %s\n", env_var->value);
-	replacement = env_var->value ? env_var->value : "";
+
+	if (strcmp(env_var->name, "?") == 0)
+	{
+		replacement = ft_itoa(mini->ret_value);
+		env_var->value = ft_itoa(mini->ret_value);
+	}
+	else
+	{
+		// Buscar la variable en el entorno
+		env_var->value = get_env_value(env_var->name, mini);
+		replacement = env_var->value ? env_var->value : "";
+		printf("VALOR======  %s\n", env_var->name);
+	}
+
 	new_len = prefix_len + strlen(replacement) + suffix_len + 1;
 	result = malloc(new_len);
-	// printf("VALOR======  %s\n", env_var->value);
+
+	printf("VALOR======  %s\n", env_var->value);
 	if (result)
 	{
 		strncpy(result, str, prefix_len);
@@ -74,6 +92,8 @@ char	*replace_env_var(const char *str, char *start, t_env_var *env_var,
 	}
 	if (env_var->value)
 		free(env_var->value);
+	if (strcmp(env_var->name, "?") == 0)
+		free((char *)replacement);
 	// printf("VALOR======  %s-\n", result);
 	// printf("%s\n", result);
 	return (result);
@@ -123,6 +143,10 @@ char	*expand_env_vars(char *str, t_minish *mini)
 	if (!result)
 		return (NULL);
 
+	if (str[0] == '\'')
+	{
+		return result;  // Devolver una copia exacta del string original
+	}
 	// Primero, revisamos si hay comillas simples
 	for (i = 0; result[i]; i++)
 	{
@@ -150,6 +174,7 @@ char	*expand_env_vars(char *str, t_minish *mini)
 
 	// Si no hay comillas simples, procedemos con la expansión normal
 	current = find_next_env_var(result, &env_var);
+	printf("Current: %s\n", current);
 	if (current)
 	{
 		char *processed = process_env_vars(result, current, &env_var, mini);
