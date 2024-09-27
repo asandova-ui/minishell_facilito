@@ -236,7 +236,7 @@ int					is_valid_number(const char *str);
 void				sig_quit(int code);
 void				init_struct_history(t_history *history);
 void				add_to_history(t_history *history, char *command);
-void				show_history(t_history *history);
+void				show_history(t_history *history, t_minish *mini);
 bool				has_redirection(const char *str);
 char				*redirect_echo(char *line);
 void				executor(char *line, t_minish *mini);
@@ -301,4 +301,5 @@ char				*allocate_new_result(char *result, const char *extra_input,
 void				append_input(char **result, const char *extra_input,
 						int is_first_input);
 char				*initialize_result(const char *str);
+int					check_spaces_history(char *command);
 #endif
