@@ -90,12 +90,12 @@ void	process_arg(t_echoState *estate)
 		{
 			qstate.in_single_quote = !qstate.in_single_quote;
 			write(1, qstate.current, 1);
+			qstate.current++;
 		}
 		else if (*qstate.current == '\"' && !qstate.in_single_quote)
 		{
 			qstate.in_double_quote = !qstate.in_double_quote;
 			qstate.current++;
-			continue ;
 		}
 		else if (*qstate.current == '$' && (qstate.in_double_quote
 				|| !qstate.in_single_quote))
