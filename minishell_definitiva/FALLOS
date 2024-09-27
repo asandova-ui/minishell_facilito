@@ -1,0 +1,8 @@
+falla:
+EXIT
+RETURN VALUES
+GLOBAL VARIABLE
+SIGNALS, cat + Ctr+C raro y ctrv ctr\ hacen cosas raras
+/bin/echo $? no funciona
+"'ls -la'"
+no funciona <<

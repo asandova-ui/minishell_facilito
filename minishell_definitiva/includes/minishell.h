@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/26 12:04:01 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/27 12:49:43 by asandova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ int					ft_cd(char *path, t_minish *mini);
 int					run_command(char *line, t_minish *mini);
 void				sig_int(int code);
 // void				sig_init(void);
-void				ft_exit(char *args);
+void				ft_exit(char *args, t_minish *mini);
 char				*ft_strndup(const char *s, size_t n);
 char				*ft_strncpy(char *dest, const char *src, size_t n);
 char				*get_env_value(const char *name, t_minish *mini);

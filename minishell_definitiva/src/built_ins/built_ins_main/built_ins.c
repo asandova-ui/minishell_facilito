@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:33:56 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 03:25:07 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/09/27 12:59:53 by asandova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	dispatch_command(t_cmd_ctx *ctx, t_minish *mini, t_history *history)
 	else if (ft_strcmp(ctx->command, "env") == 0)
 		mini->ret_value = ft_env(mini);
 	else if (ft_strcmp(ctx->command, "exit") == 0)
-		ft_exit(strtok(NULL, "\n"));
+		ft_exit(strtok(NULL, "\n"), mini);
 	else if (ft_strcmp(ctx->command, "history") == 0)
 		show_history(history, mini);
 	else

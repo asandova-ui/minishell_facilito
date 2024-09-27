@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:36:07 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 09:55:53 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/27 12:54:22 by asandova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,25 @@
 #include "../../../printf/includes/ft_printf.h"
 #include "../../../printf/libft/libft.h"
 
-void	ft_exit(char *args)
+void	ft_exit(char *args, t_minish *mini)
 {
 	t_exitState	state;
+	int 		num;
 
+	mini->exec = 1;
+	num = -999999999;
 	initialize_exit_state(&state, args);
 	handle_empty_args(&state);
 	state.num_args = count_args(state.args);
 	handle_too_many_args(&state);
-	process_exit_arg(&state);
-	exit(state.exit_value);
+	if (state.num_args == 1)
+	{
+		process_exit_arg(&state);
+		if (state.exit_value != num)
+		{
+			exit(state.exit_value);
+		}
+	}
 }
 
 int	is_valid_number(const char *str)
