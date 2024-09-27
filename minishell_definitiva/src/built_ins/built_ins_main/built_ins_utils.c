@@ -24,7 +24,7 @@ int	ft_strcmp(const char *str1, const char *str2)
 	return (*(unsigned char *)str1 - *(unsigned char *)str2);
 }
 
-void	show_history(t_history *history)
+void	show_history(t_history *history, t_minish *mini)
 {
 	int	i;
 
@@ -34,6 +34,7 @@ void	show_history(t_history *history)
 		ft_printf("%d %s\n", i + 1, history->history[i]);
 		i++;
 	}
+	mini->exec = 1;
 }
 
 bool	has_redirection(const char *str)
