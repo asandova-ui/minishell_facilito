@@ -43,6 +43,12 @@ void	process_variable(t_echoQuoteState *qstate, t_echoState *estate)
 	char	*env_value;
 
 	var_start = qstate->current + 1;
+	if (*var_start == '?')
+	{
+		ft_printf("%d", estate->mini->ret_value);
+		qstate->current = var_start + 1;
+		return ;
+	}
 	var_end = var_start;
 	while (*var_end && (*var_end == '_' || isalnum(*var_end)))
 		var_end++;
@@ -89,13 +95,14 @@ void	process_arg(t_echoState *estate)
 		if (*qstate.current == '\'' && !qstate.in_double_quote)
 		{
 			qstate.in_single_quote = !qstate.in_single_quote;
-			write(1, qstate.current, 1);
 			qstate.current++;
+			continue ;
 		}
 		else if (*qstate.current == '\"' && !qstate.in_single_quote)
 		{
 			qstate.in_double_quote = !qstate.in_double_quote;
 			qstate.current++;
+			continue ;
 		}
 		else if (*qstate.current == '$' && (qstate.in_double_quote
 				|| !qstate.in_single_quote))
