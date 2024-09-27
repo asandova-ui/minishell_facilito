@@ -112,22 +112,25 @@ int	minishell(t_minish *mini, t_history *history)
 void	add_to_history(t_history *history, char *command)
 {
 	int	i;
+	int	solve;
 
 	i = 1;
-	add_history(command);
-	if (history->count < 1000)
+	solve = check_spaces_history(command);
+	if (solve != 0)
 	{
-		history->history[history->count++] = strdup(command);
-	}
-	else
-	{
-		free(history->history[0]);
-		while (i < 1000)
+		add_history(command);
+		if (history->count < 1000)
+			history->history[history->count++] = strdup(command);
+		else
 		{
-			history->history[i - 1] = history->history[i];
-			i++;
+			free(history->history[0]);
+			while (i < 1000)
+			{
+				history->history[i - 1] = history->history[i];
+				i++;
+			}
+			history->history[999] = strdup(command);
 		}
-		history->history[999] = strdup(command);
 	}
 }
 
