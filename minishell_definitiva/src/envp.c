@@ -30,3 +30,17 @@ void	init_path(t_minish *mini)
 	mini->path = paths;
 	return ;
 }
+
+int	check_spaces_history(char *command)
+{
+	int	i;
+
+	i = 0;
+	while (command[i])
+	{
+		if (command[i] > 32)
+			return (1);
+		i++;
+	}
+	return (0);
+}
