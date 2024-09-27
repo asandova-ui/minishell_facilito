@@ -103,7 +103,7 @@ void	dispatch_command(t_cmd_ctx *ctx, t_minish *mini, t_history *history)
 	else if (ft_strcmp(ctx->command, "exit") == 0)
 		ft_exit(strtok(NULL, "\n"));
 	else if (ft_strcmp(ctx->command, "history") == 0)
-		show_history(history);
+		show_history(history, mini);
 	else
 	{
 		mini->ret_value = 127;
