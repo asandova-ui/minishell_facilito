@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:48:45 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 09:58:38 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/29 19:58:19 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,7 @@
 #include "../printf/includes/ft_printf.h"
 #include "../printf/libft/libft.h"
 
-t_minish	*g_mini;
-
-char	*get_prompt(int ret_value)
-{
-	char	*prompt;
-
-	prompt = malloc(100);
-	if (prompt == NULL)
-	{
-		perror("malloc");
-		exit(1);
-	}
-	if (ret_value == 0)
-	{
-		snprintf(prompt, 100, "\033[1;32m→ minishell ▸ \033[0m");
-	}
-	else
-	{
-		snprintf(prompt, 100, "\033[1;31m→ minishell ▸ \033[0m");
-	}
-	return (prompt);
-}
+extern t_signal_status	g_signal_info;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -45,7 +24,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_struct(&mini, envp);
-	g_mini = &mini;
 	history = malloc(sizeof(t_history));
 	if (!history)
 	{
@@ -58,11 +36,10 @@ int	main(int argc, char **argv, char **envp)
 	{
 		if (minishell(&mini, history))
 			break ;
-		mini.exec = 0;
 	}
 	free_history(history);
 	free_envp(mini.envp);
-	exit(EXIT_SUCCESS);
+	exit(mini.ret_value);
 }
 
 int	minishell(t_minish *mini, t_history *history)
@@ -72,39 +49,42 @@ int	minishell(t_minish *mini, t_history *history)
 	char	*prompt;
 
 	init_path(mini);
-	// sig_init();
-	// prompt = get_prompt(mini->ret_value);
 	prompt = "\033[1;32m→ minishell ▸ \033[0m";
+	g_signal_info.is_executing = 0;
 	line = readline(prompt);
-	// free(prompt);
+	if (g_signal_info.signal_status != 0)
+	{
+		mini->ret_value = g_signal_info.signal_status;
+		g_signal_info.signal_status = 0;
+	}
 	if (line == NULL)
 	{
 		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, "exit\n", 5);
-		free(line);
+		mini->ret_value = 0;
 		return (1);
 	}
-	if (line == NULL)
-		return (1);
-	add_to_history(history, line);
-	temp = ft_strdup2(line);
-	built_ins(temp, mini, history);
-	if (mini->exec == 0)
-		mini->ret_value = run_command(line, mini);
-	free(temp);
+	if (*line)
+	{
+		add_to_history(history, line);
+		temp = ft_strdup2(line);
+		g_signal_info.is_executing = 1;
+		built_ins(temp, mini, history);
+		if (mini->exec == 0)
+			run_command(line, mini);
+		g_signal_info.is_executing = 0;
+		if (g_signal_info.signal_status != 0)
+		{
+			mini->ret_value = g_signal_info.signal_status;
+			g_signal_info.signal_status = 0;
+		}
+		free(temp);
+	}
 	free(line);
-	line = NULL;
 	if (mini->path)
 	{
 		free_paths(mini->path);
 		mini->path = NULL;
-	}
-	if (mini->redisplay_prompt)
-	{
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		mini->redisplay_prompt = 0;
 	}
 	return (0);
 }
@@ -144,7 +124,6 @@ void	init_struct(t_minish *mini, char **envp)
 	mini->env_exist = 0;
 	mini->exec = 0;
 	mini->pid = 0;
-	mini->redisplay_prompt = 0;
 	if (envp)
 		mini->envp = dup_envp(envp);
 	else

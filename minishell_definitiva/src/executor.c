@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 12:06:54 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/27 16:25:51 by asandova         ###   ########.fr       */
+/*   Updated: 2024/09/29 20:13:49 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	init_command_context(t_command_context *ctx, char *line, t_minish *mini)
 	ctx->expanded_line = NULL;
 	ctx->mini = mini;
 }
+
 void	handle_child_process(char **args, t_minish *mini, t_redirection *red)
 {
 	execute_command(args, mini, red);
@@ -32,6 +33,7 @@ void	handle_parent_process(pid_t pid, t_minish *mini)
 	int	status;
 
 	waitpid(pid, &status, 0);
+	(void)mini;
 	if (WIFEXITED(status))
 		mini->ret_value = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
@@ -59,84 +61,21 @@ void	execute_single_command(t_command_context *ctx)
 	free_args(args);
 }
 
-char* parse_command_quotes(const char* command) {
-    // Si el comando empieza con comillas simples o dobles, devolver tal cual
-    if (command[0] == '\'' || command[0] == '"') {
-        return strdup(command);  // Retorna una copia del comando original
-    }
-
-    int len = strlen(command);
-    char* result = malloc(len + 1);
-    int result_index = 0;
-    bool in_single_quotes = false;
-    bool in_double_quotes = false;
-    bool last_char_was_space = true;
-    bool is_echo_command = (strncmp(command, "/bin/echo ", 10) == 0);
-
-    for (int i = 0; i < len; i++) {
-        char c = command[i];
-
-        if (c == '\'' && !in_double_quotes) {
-            in_single_quotes = !in_single_quotes;
-            if (is_echo_command && command[i + 1] == '$') {
-                // Mantener comillas simples alrededor de variables para echo '$var'
-                result[result_index++] = c;
-            } else if (!in_single_quotes) {
-                // Si es una comilla simple de cierre, agregarla al resultado
-                result[result_index++] = c;
-            }
-        } else if (c == '"' && !in_single_quotes) {
-            in_double_quotes = !in_double_quotes;
-            if (!in_double_quotes && is_echo_command && command[i + 1] == '$') {
-                // Eliminar comillas dobles alrededor de variables para echo "$var"
-                continue;
-            }
-        } else if (c == ' ' && !in_single_quotes && !in_double_quotes) {
-            if (!last_char_was_space) {
-                result[result_index++] = c;
-                last_char_was_space = true;
-            }
-        } else {
-            result[result_index++] = c;
-            last_char_was_space = false;
-        }
-    }
-
-    if (result_index > 0 && result[result_index - 1] == ' ') {
-        result_index--;
-    }
-
-    result[result_index] = '\0';
-    return result;
-}
-
-
-
-int	run_command(char *line, t_minish *mini)
+void	run_command(char *line, t_minish *mini)
 {
 	t_command_context	ctx;
 	char				*quoted_line;
 
-	printf("LINEA ORIGINAL:           %s\n", line);
-
-	quoted_line = handle_quotes(line);//esto me ayuda a manejar el quote>, por si no estan cerradas las llaves
-
+	quoted_line = handle_quotes(line);
 	init_command_context(&ctx, quoted_line, mini);
-	
 	ctx.trimmed_line = trim_whitespace(line);
-	printf("LINEA MODIF trimmed  :    %s\n", ctx.trimmed_line);
-	
 	ctx.trimmed_line = parse_command_quotes(ctx.trimmed_line);
-	printf("LINEA MODIF QUOTES  :     %s\n", ctx.trimmed_line);
-
 	ctx.expanded_line = expand_env_vars(ctx.trimmed_line, mini);
-	printf("LINEA EXPANDIDA FINAL  :  %s\n", ctx.expanded_line);
-
 	if (ft_strchr(ctx.expanded_line, '|'))
 		execute_pipeline(ctx.expanded_line, ctx.mini);
 	else
 		execute_single_command(&ctx);
 	cleanup_command_context(&ctx);
 	free(quoted_line);
-	return (mini->ret_value);
+	return ;
 }

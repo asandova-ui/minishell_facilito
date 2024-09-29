@@ -1,6 +1,6 @@
 falla:
 
-RETURN VALUES
-GLOBAL VARIABLE
-SIGNALS, cat + Ctr+C raro y ctrv ctr\ hacen cosas raras
-/bin/echo $? no funciona ---> ya funciona, se comprobará cuando actualicemos return values
+RETURN VALUES ---> FUNCIONA
+GLOBAL VARIABLE ----> FUNCIONA, he hecho la guarrada historica
+SIGNALS, cat + Ctr+C raro y ctrv ctr\ hacen cosas raras ---> FUNCIONA
+/bin/echo $? no funciona ---> FUNCIONA

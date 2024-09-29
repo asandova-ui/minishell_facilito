@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:33:56 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/27 12:59:53 by asandova         ###   ########.fr       */
+/*   Updated: 2024/09/29 20:18:54 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	handle_echo(t_cmd_ctx *ctx, t_minish *mini)
 		nueva_linea = redirect_echo(ctx->line_copy);
 		if (nueva_linea != NULL)
 		{
-			mini->ret_value = run_command(nueva_linea, mini);
+			run_command(nueva_linea, mini);
 			free(nueva_linea);
 		}
 	}

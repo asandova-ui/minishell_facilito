@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:56:29 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/27 15:23:54 by asandova         ###   ########.fr       */
+/*   Updated: 2024/09/29 19:59:14 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,52 +14,49 @@
 #include "../printf/includes/ft_printf.h"
 #include "../printf/libft/libft.h"
 
-void write_heredoc_content(int pipefd[2], char *heredoc_delim, bool is_interactive)
+void	write_heredoc_content(int pipefd[2], char *heredoc_delim,
+		bool is_interactive)
 {
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
+	char	*line;
+	size_t	len;
+	ssize_t	read;
 
-    while (1)
-    {
-        if (is_interactive)
-            write(STDERR_FILENO, "> ", 2);
-        
-        read = getline(&line, &len, stdin);
-        if (read == -1)
-            break;
-        
-        line[strcspn(line, "\n")] = 0;
-        if (ft_strcmp(line, heredoc_delim) == 0)
-            break;
-        
-        write(pipefd[1], line, strlen(line));
-        write(pipefd[1], "\n", 1);
-    }
-    free(line);
+	line = NULL;
+	len = 0;
+	while (1)
+	{
+		if (is_interactive)
+			write(STDERR_FILENO, "> ", 2);
+		read = getline(&line, &len, stdin);
+		if (read == -1)
+			break ;
+		line[strcspn(line, "\n")] = 0;
+		if (ft_strcmp(line, heredoc_delim) == 0)
+			break ;
+		write(pipefd[1], line, strlen(line));
+		write(pipefd[1], "\n", 1);
+	}
+	free(line);
 }
 
-void handle_heredoc(t_redirection *red)
+void	handle_heredoc(t_redirection *red)
 {
-    int pipefd[2];
-    bool is_interactive;
+	int		pipefd[2];
+	bool	is_interactive;
 
-    if (red->heredoc_delim)
-    {
-        if (pipe(pipefd) == -1)
-        {
-            perror("pipe");
-            exit(EXIT_FAILURE);
-        }
-        
-        // Comprobar si la entrada estándar es un terminal
-        is_interactive = isatty(STDIN_FILENO);
-        
-        write_heredoc_content(pipefd, red->heredoc_delim, is_interactive);
-        close(pipefd[1]);
-        dup2(pipefd[0], STDIN_FILENO);
-        close(pipefd[0]);
-    }
+	if (red->heredoc_delim)
+	{
+		if (pipe(pipefd) == -1)
+		{
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
+		is_interactive = isatty(STDIN_FILENO);
+		write_heredoc_content(pipefd, red->heredoc_delim, is_interactive);
+		close(pipefd[1]);
+		dup2(pipefd[0], STDIN_FILENO);
+		close(pipefd[0]);
+	}
 }
 
 void	apply_input_redirection(t_redirection *red)

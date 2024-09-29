@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/27 12:49:43 by asandova         ###   ########.fr       */
+/*   Updated: 2024/09/29 20:12:46 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ typedef struct s_minish
 	int				comillas;
 	int				exec;
 	pid_t			pid;
-	int				redisplay_prompt;
 }					t_minish;
 
 typedef struct s_token
@@ -199,6 +198,13 @@ typedef struct s_quote_state
 	int				in_double_quote;
 }					t_quote_state;
 
+typedef struct s_signal_status
+{
+    volatile sig_atomic_t signal_status;
+    volatile sig_atomic_t is_executing;
+}					t_signal_status;
+
+
 void				init_path(t_minish *mini);
 void				init_struct(t_minish *mini, char **envp);
 int					minishell(t_minish *mini, t_history *history);
@@ -225,9 +231,8 @@ int					compare_env(const void *a, const void *b);
 void				ft_qsort(void *base, size_t nitems, size_t size,
 						int (*compar)(const void *, const void *));
 int					ft_cd(char *path, t_minish *mini);
-int					run_command(char *line, t_minish *mini);
+void run_command(char *line, t_minish *mini);
 void				sig_int(int code);
-// void				sig_init(void);
 void				ft_exit(char *args, t_minish *mini);
 char				*ft_strndup(const char *s, size_t n);
 char				*ft_strncpy(char *dest, const char *src, size_t n);
@@ -247,10 +252,7 @@ char				*ft_strjoin_3args(char const *s1, char connector,
 						char const *s2);
 char				*get_env_value(const char *name, t_minish *mini);
 char				*handle_quotes(const char *str);
-
 char				*expand_env_vars(char *str, t_minish *mini);
-//char *expand_env_vars(const char *line, t_minish *mini);
-
 char				*trim_whitespace(char *str);
 char				**parse_command(char *cmd, t_redirection *red);
 void				handle_heredoc(t_redirection *red);
@@ -302,4 +304,5 @@ void				append_input(char **result, const char *extra_input,
 						int is_first_input);
 char				*initialize_result(const char *str);
 int					check_spaces_history(char *command);
+char				*parse_command_quotes(const char *command);
 #endif

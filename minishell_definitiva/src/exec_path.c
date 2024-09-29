@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 10:49:10 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/23 11:02:53 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/29 20:26:05 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	execute_from_path(char **args, t_minish *mini)
 			execve(exec_path, args, mini->envp);
 			perror("execve");
 			free(exec_path);
-			exit(EXIT_FAILURE);
+			exit(126);
 		}
 		free(exec_path);
 		i++;
@@ -50,16 +50,30 @@ void	execute_command(char **args, t_minish *mini, t_redirection *red)
 		{
 			execve(args[0], args, mini->envp);
 			perror("execve");
+			exit(126);
 		}
 		else
+		{
 			fprintf(stderr, "Command not found or not executable: %s\n",
 				args[0]);
+			exit(127);
+		}
 	}
 	else
 	{
 		if (mini->path != NULL)
-			execute_from_path(args, mini);
-		fprintf(stderr, "Command not found: %s\n", args[0]);
+		{
+			if (execute_from_path(args, mini) == 0)
+			{
+				fprintf(stderr, "Command not found: %s\n", args[0]);
+				exit(127);
+			}
+		}
+		else
+		{
+			fprintf(stderr, "PATH is not set\n");
+			exit(127);
+		}
 	}
-	exit(EXIT_FAILURE);
+	exit(126);
 }
