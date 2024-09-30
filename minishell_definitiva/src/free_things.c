@@ -6,13 +6,11 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:51:13 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 09:43:35 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 10:45:34 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include "../printf/includes/ft_printf.h"
-#include "../printf/libft/libft.h"
 
 void	close_all_pipes(t_pipeline *pipeline)
 {

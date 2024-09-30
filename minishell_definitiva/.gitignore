@@ -1,0 +1,51 @@
+# Ignore editor directories and files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore compiled object files
+*.o
+
+# Ignore static and dynamic libraries
+*.a
+*.so
+*.dylib
+*.lib
+*.dll
+
+# Ignore executable files
+*.exe
+*.out
+*.app
+a.out
+
+# Ignore debug files and directories
+*.dSYM/
+*.stackdump
+
+# Ignore backup and temporary files
+*~
+*.swp
+*.swo
+*.tmp
+*.log
+
+# Ignore core dumps
+core
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore CTags files
+tags
+
+# Ignore generated documentation
+/docs/
+
+# Ignore node modules if any JavaScript projects are present
+node_modules/
+
+# Ignore coverage reports
+coverage/

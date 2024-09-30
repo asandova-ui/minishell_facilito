@@ -6,13 +6,11 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:48:35 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 09:43:36 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 10:45:34 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include "../printf/includes/ft_printf.h"
-#include "../printf/libft/libft.h"
 
 void	free_redirection(t_redirection *red)
 {

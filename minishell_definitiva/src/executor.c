@@ -6,13 +6,11 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 12:06:54 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/29 20:13:49 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 10:45:34 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include "../printf/includes/ft_printf.h"
-#include "../printf/libft/libft.h"
 
 void	init_command_context(t_command_context *ctx, char *line, t_minish *mini)
 {
@@ -68,9 +66,12 @@ void	run_command(char *line, t_minish *mini)
 
 	quoted_line = handle_quotes(line);
 	init_command_context(&ctx, quoted_line, mini);
+	printf("PRIMERA LINEA   %s\n", quoted_line);
 	ctx.trimmed_line = trim_whitespace(line);
 	ctx.trimmed_line = parse_command_quotes(ctx.trimmed_line);
+	printf("SEGUNDA LINEA   %s\n", ctx.trimmed_line);
 	ctx.expanded_line = expand_env_vars(ctx.trimmed_line, mini);
+	printf("TERCERA LINEA   %s\n", ctx.expanded_line);
 	if (ft_strchr(ctx.expanded_line, '|'))
 		execute_pipeline(ctx.expanded_line, ctx.mini);
 	else

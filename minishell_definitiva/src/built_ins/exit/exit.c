@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:36:07 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/27 12:54:22 by asandova         ###   ########.fr       */
+/*   Updated: 2024/09/30 10:26:15 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 
 void	ft_exit(char *args, t_minish *mini)
 {
-	t_exitState	state;
-	int 		num;
+	t_exitState		state;
+	int				num;
 
 	mini->exec = 1;
 	num = -999999999;

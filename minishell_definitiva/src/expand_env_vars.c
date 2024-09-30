@@ -6,13 +6,11 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 12:42:28 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/29 19:57:05 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 11:55:47 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include "../printf/includes/ft_printf.h"
-#include "../printf/libft/libft.h"
 
 char	*trim_whitespace(char *str)
 {
@@ -54,43 +52,6 @@ char	*find_next_env_var(char *start, t_env_var *env_var)
 	return (find_next_env_var(dollar + 1, env_var));
 }
 
-char	*replace_env_var(const char *str, char *start, t_env_var *env_var,
-		t_minish *mini)
-{
-	char		*result;
-	size_t		prefix_len;
-	size_t		suffix_len;
-	size_t		new_len;
-	const char	*replacement;
-
-	prefix_len = start - str;
-	suffix_len = strlen(start + env_var->var_len + 1);
-	if (strcmp(env_var->name, "?") == 0)
-	{
-		replacement = ft_itoa(mini->ret_value);
-		env_var->value = ft_itoa(mini->ret_value);
-	}
-	else
-	{
-		env_var->value = get_env_value(env_var->name, mini);
-		replacement = env_var->value ? env_var->value : "";
-	}
-	new_len = prefix_len + strlen(replacement) + suffix_len + 1;
-	result = malloc(new_len);
-	if (result)
-	{
-		strncpy(result, str, prefix_len);
-		strcpy(result + prefix_len, replacement);
-		strcpy(result + prefix_len + strlen(replacement), start
-			+ env_var->var_len + 1);
-	}
-	if (env_var->value)
-		free(env_var->value);
-	if (strcmp(env_var->name, "?") == 0)
-		free((char *)replacement);
-	return (result);
-}
-
 char	*process_env_vars(char *str, char *current, t_env_var *env_var,
 		t_minish *mini)
 {
@@ -121,7 +82,7 @@ char	*process_env_vars(char *str, char *current, t_env_var *env_var,
 	return (result);
 }
 
-char	*expand_env_vars(char *str, t_minish *mini)
+/*char	*expand_env_vars(char *str, t_minish *mini)
 {
 	t_env_var	env_var;
 	char		*result;
@@ -177,4 +138,4 @@ char	*expand_env_vars(char *str, t_minish *mini)
 	}
 
 	return (result);
-}
+}*/

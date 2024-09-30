@@ -6,13 +6,11 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 11:01:23 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/23 11:02:13 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 10:45:06 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include "../printf/includes/ft_printf.h"
-#include "../printf/libft/libft.h"
 
 void	init_path(t_minish *mini)
 {

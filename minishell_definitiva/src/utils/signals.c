@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 12:10:50 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/29 19:51:54 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 10:36:51 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,13 @@ void	reset_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+}
+
+void	handle_signal_status_remix(t_minish *mini)
+{
+	if (g_signal_info.signal_status != 0)
+	{
+		mini->ret_value = g_signal_info.signal_status;
+		g_signal_info.signal_status = 0;
+	}
 }
