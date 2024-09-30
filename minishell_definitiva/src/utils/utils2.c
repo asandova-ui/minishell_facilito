@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:13:38 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 10:38:46 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 19:47:49 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	cleanup_command_context(t_command_context *ctx)
 	free(ctx->expanded_line);
 	if (ctx->trimmed_line != ctx->line)
 		free(ctx->trimmed_line);
+	free(ctx->final_line);
 }
 
 bool	is_echo_command(const char *command)

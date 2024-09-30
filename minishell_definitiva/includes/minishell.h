@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/30 11:58:06 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 21:03:33 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ typedef struct s_command_context
 	char					*line;
 	char					*trimmed_line;
 	char					*expanded_line;
+	char					*final_line;
 	t_minish				*mini;
 }							t_command_context;
 
@@ -222,6 +223,12 @@ typedef struct s_build_string
 	const char				*replacement;
 }							t_build_string;
 
+typedef struct s_iandj
+{
+	int						i;
+	int						j;
+}							t_iandj;
+
 void						init_path(t_minish *mini);
 void						init_struct(t_minish *mini, char **envp);
 int							minishell(t_minish *mini, t_history *history);
@@ -335,4 +342,9 @@ char						*replace_env_var(const char *str, char *start,
 char						*find_next_env_var(char *start, t_env_var *env_var);
 char						*process_env_vars(char *str, char *current,
 								t_env_var *env_var, t_minish *mini);
+char						*morethings(char *line);
+char						*reemplazar_comillas(const char *input);
+bool						es_caracter_especial(char c);
+void						procesar_comilla(const char *input, char *res,
+								t_iandj *iandj, bool *in_single_quote);
 #endif

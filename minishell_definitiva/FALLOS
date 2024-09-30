@@ -1,14 +1,12 @@
-ls "-la" no se ejecuta y deberia
-ls '' se ejecuta y no deberia
-interpretar pipes y redirecciones entre single quotes---> cuando pille uno de esos entre single que les ponga doubles y ya interreta el error
+@@@@@@@@@ls "-la" no se ejecuta y deberia
+@@@@@@@@@ls '' se ejecuta y no deberia
+@@@@@@@@@interpretar pipes y redirecciones entre single quotes---> cuando pille uno de esos entre single que les ponga doubles y ya interreta el error
 cat < in > out | cat << yes, no se ejecuta el Segundo commando por algun motive
 Veo que falla cuando hay pipes con la redireccion <<
 Hay un error con el historial:
 	a veces he conseguido que se pete
 	cuando encuentre un caso concreto lo pongo
 
-Leak al poner ' y en el dquote poner otra ', el leak está en el exec
+@@@@@@@@@@Leak al poner ' y en el dquote poner otra ', el leak está en el exec
 Falta actualizer bien el return value en /bin/echo $?
 Falta revisar todos los return values de builtins
-
-

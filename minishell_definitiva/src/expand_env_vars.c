@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 12:42:28 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 11:55:47 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 19:31:37 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,61 +81,3 @@ char	*process_env_vars(char *str, char *current, t_env_var *env_var,
 	}
 	return (result);
 }
-
-/*char	*expand_env_vars(char *str, t_minish *mini)
-{
-	t_env_var	env_var;
-	char		*result;
-	char		*current;
-	int			in_single_quote = 0;
-	int			i, j;
-	int			should_expand = 1;
-
-	init_env_var(&env_var);
-	result = ft_strdup(str);
-	if (!result)
-		return (NULL);
-
-	if (str[0] == '\'')
-	{
-		return (result);
-	}
-	for (i = 0; result[i]; i++)
-	{
-		if (result[i] == '\'')
-		{
-			in_single_quote = !in_single_quote;
-			should_expand = 0;
-			break ;
-		}
-	}
-	if (!should_expand)
-	{
-		for (i = 0, j = 0; result[i]; i++)
-		{
-			if (result[i] != '\'')
-			{
-				result[j++] = result[i];
-			}
-		}
-		result[j] = '\0';
-		return (result);
-	}
-	current = find_next_env_var(result, &env_var);
-	if (current)
-	{
-		char *processed = process_env_vars(result, current, &env_var, mini);
-		if (processed)
-		{
-			free(result);
-			result = processed;
-		}
-		else
-		{
-			free(result);
-			return (NULL);
-		}
-	}
-
-	return (result);
-}*/

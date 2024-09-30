@@ -6,11 +6,13 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:56:29 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 10:45:34 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 21:34:50 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include "../printf/includes/ft_printf.h"
+#include "../printf/libft/libft.h"
 
 void	write_heredoc_content(int pipefd[2], char *heredoc_delim,
 		bool is_interactive)
@@ -99,7 +101,7 @@ void	apply_output_redirection(t_redirection *red)
 
 void	apply_redirections(t_redirection *red)
 {
+	handle_heredoc(red);
 	apply_input_redirection(red);
 	apply_output_redirection(red);
-	handle_heredoc(red);
 }
