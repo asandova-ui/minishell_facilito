@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:33:56 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/29 20:18:54 by alonso           ###   ########.fr       */
+/*   Updated: 2024/09/30 21:42:34 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,7 @@ void	dispatch_command(t_cmd_ctx *ctx, t_minish *mini, t_history *history)
 	else if (ft_strcmp(ctx->command, "history") == 0)
 		show_history(history, mini);
 	else
-	{
-		mini->ret_value = 127;
 		mini->exec = 0;
-	}
 }
 
 void	built_ins(char *line, t_minish *mini, t_history *history)
