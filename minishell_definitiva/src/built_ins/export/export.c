@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:36:23 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 09:59:43 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 01:58:13 by jamorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	process_export_arg(t_exportState *state, char *arg, char *name)
 		if (is_valid_export_env(name))
 		{
 			if (add_or_update_export_env_var(state->mini, name, value) != 0)
-				state->ret_value = 1;
+				state->ret_value = 0;
 		}
 		else
 		{
