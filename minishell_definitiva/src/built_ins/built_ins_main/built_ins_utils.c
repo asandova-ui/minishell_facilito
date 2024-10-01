@@ -99,7 +99,7 @@ void	handle_unset(t_cmd_ctx *ctx, t_minish *mini)
 {
 	int	ret_value;
 
-	ctx->args = strtok(NULL, "\n");
+	ctx->args = ft_strtok(NULL, "\n");
 	if (ctx->args == NULL)
 	{
 		mini->ret_value = 0;
