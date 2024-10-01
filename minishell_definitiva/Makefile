@@ -3,7 +3,8 @@ SRCS = src/main.c src/envp.c src/built_ins/cd.c src/built_ins/unset.c src/built_
 		src/built_ins/export/export_utils3.c get_next_line/get_next_line_utils.c get_next_line/get_next_line.c src/utils/utils.c src/executor.c \
 		src/utils/signals.c src/free_things.c src/expand_env_vars.c src/parse_command.c src/redir.c src/pipes.c src/exec_path.c src/built_ins/echo/echo.c \
 		src/built_ins/echo/echo_utils.c src/built_ins/echo/quotes_utils.c src/parse_command_quotes.c src/built_ins/echo/getenv_utils.c src/built_ins/exit/exit.c \
-		src/built_ins/exit/exit_utils.c src/utils/utils2.c src/expand_env_vars2.c src/expand_env_vars3.c src/morethings.c src/morethings2.c
+		src/built_ins/exit/exit_utils.c src/utils/utils2.c src/expand_env_vars2.c src/expand_env_vars3.c src/morethings.c src/morethings2.c \
+		src/built_ins/built_ins_main/built_ins_utils2.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFTPRINTF_PATH = ./printf
@@ -55,12 +56,12 @@ endef
 
 %.o: %.c
 	@echo "$(MAGENTA)Compiling $<...$(RESET)"
-	@$(CC) $(CFLAGS) -c $< -o $@ > 1
+	@$(CC) $(CFLAGS) -c $< -o $@
 	@$(compile_animation)
 
 clean:
 	@echo "$(RED)Cleaning object files...$(RESET)"
-	@make -C $(LIBFTPRINTF_PATH) clean > 1
+	@make -C $(LIBFTPRINTF_PATH) clean
 	@$(RM) $(OBJS)
 	@echo "$(GREEN)Cleaned successfully!$(RESET)"
 
