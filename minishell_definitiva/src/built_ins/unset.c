@@ -6,7 +6,7 @@
 /*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:37:53 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 03:17:10 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/10/01 01:47:29 by jamorale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ int	ft_unset(char *args, t_minish *mini)
 		if (is_valid_export_env(arg))
 		{
 			if (remove_env_var(mini, arg) != 0)
-				ret_value = 1;
+				ret_value = 0;
 		}
 		else
 		{
 			fprintf(stderr, "unset: %s: not a valid identifier\n", arg);
-			ret_value = 1;
+			ret_value = 0;
 		}
 		arg = strtok(NULL, " \n");
 	}
