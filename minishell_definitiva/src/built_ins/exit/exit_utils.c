@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asandova <asandova@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 18:55:09 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/27 12:53:05 by asandova         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:36:33 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ int	count_args(char *args)
 		perror("strdup");
 		exit(1);
 	}
-	arg = strtok(temp_args, " \n");
+	arg = ft_strtok(temp_args, " \n");
 	while (arg != NULL)
 	{
 		count++;
-		arg = strtok(NULL, " \n");
+		arg = ft_strtok(NULL, " \n");
 	}
 	free(temp_args);
 	return (count);
@@ -56,7 +56,7 @@ void	handle_too_many_args(t_exitState *state)
 {
 	if (state->num_args > 1)
 	{
-		fprintf(stderr, "exit\nbash: exit: too many arguments\n");
+		printf("exit\nbash: exit: too many arguments\n");
 	}
 }
 
@@ -64,7 +64,7 @@ void	process_exit_arg(t_exitState *state)
 {
 	if (!is_valid_number(state->args))
 	{
-		fprintf(stderr, "exit\nbash: exit: %s: numeric argument required\n",
+		printf("exit\nbash: exit: %s: numeric argument required\n",
 			state->args);
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 18:45:15 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/24 09:51:14 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:41:35 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ char	*mini_getenv(t_minish *mini, const char *name)
 	size_t	len;
 
 	i = 0;
-	len = strlen(name);
+	len = ft_strlen(name);
 	while (mini->envp[i] != NULL)
 	{
-		if (strncmp(mini->envp[i], name, len) == 0 && mini->envp[i][len] == '=')
+		if (ft_strncmp(mini->envp[i], name, len) == 0 && mini->envp[i][len] == '=')
 		{
 			return (mini->envp[i] + len + 1);
 		}
@@ -38,7 +38,7 @@ char	*get_env_value(const char *name, t_minish *mini)
 
 	value = mini_getenv(mini, name);
 	if (value != NULL)
-		return (strdup(value));
+		return (ft_strdup(value));
 	else
 		return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/29 20:12:22 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 10:25:19 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:13:43 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ char	*parse_command_quotes(const char *command)
 	int				i;
 
 	if (command[0] == '\'' || command[0] == '"')
-		return (strdup(command));
-	len = strlen(command);
+		return (ft_strdup(command));
+	len = ft_strlen(command);
 	initialize_state(&state, command, len);
 	i = 0;
 	while (i < len)

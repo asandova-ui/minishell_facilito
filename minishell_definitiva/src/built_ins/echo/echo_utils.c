@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 18:43:58 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/25 06:19:18 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:40:04 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	handle_n_flag(t_echoState *state)
 	if (strcmp(state->arg, "-n") == 0)
 	{
 		state->new_line = 0;
-		state->arg = strtok(NULL, " \n");
+		state->arg = ft_strtok(NULL, " \n");
 	}
 }
 
@@ -50,15 +50,15 @@ void	process_variable(t_echoQuoteState *qstate, t_echoState *estate)
 		return ;
 	}
 	var_end = var_start;
-	while (*var_end && (*var_end == '_' || isalnum(*var_end)))
+	while (*var_end && (*var_end == '_' || ft_isalnum(*var_end)))
 		var_end++;
 	var_len = var_end - var_start;
-	var_name = strndup(var_start, var_len);
+	var_name = ft_strndup(var_start, var_len);
 	env_value = mini_getenv(estate->mini, var_name);
 	free(var_name);
 	if (env_value)
 	{
-		write(1, env_value, strlen(env_value));
+		write(1, env_value, ft_strlen(env_value));
 	}
 	qstate->current = var_end;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:34:43 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/25 05:34:27 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:08:40 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ int	ft_echo(char *line, t_minish *mini)
 	initialize_echo_state(&state, line, mini);
 	if (state.processed_line == NULL)
 		return (1);
-	state.arg = strtok(state.processed_line, " \n");
+	state.arg = ft_strtok(state.processed_line, " \n");
 	if (!handle_empty_arg(&state))
 		return (0);
 	handle_n_flag(&state);
 	while (state.arg != NULL)
 	{
 		process_arg(&state);
-		state.arg = strtok(NULL, " \n");
+		state.arg = ft_strtok(NULL, " \n");
 		if (state.arg != NULL)
 			write(1, " ", 1);
 	}

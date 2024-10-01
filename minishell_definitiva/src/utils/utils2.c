@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:13:38 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 19:47:49 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:25:54 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	cleanup_command_context(t_command_context *ctx)
 
 bool	is_echo_command(const char *command)
 {
-	return (strncmp(command, "/bin/echo ", 10) == 0);
+	return (ft_strncmp(command, "/bin/echo ", 10) == 0);
 }
 
 void	add_to_history(t_history *history, char *command)
@@ -53,7 +53,7 @@ void	add_to_history(t_history *history, char *command)
 	{
 		add_history(command);
 		if (history->count < 1000)
-			history->history[history->count++] = strdup(command);
+			history->history[history->count++] = ft_strdup(command);
 		else
 		{
 			free(history->history[0]);
@@ -62,7 +62,7 @@ void	add_to_history(t_history *history, char *command)
 				history->history[i - 1] = history->history[i];
 				i++;
 			}
-			history->history[999] = strdup(command);
+			history->history[999] = ft_strdup(command);
 		}
 	}
 }

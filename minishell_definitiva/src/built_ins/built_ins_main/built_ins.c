@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:33:56 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 21:42:34 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:36:32 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	built_ins(char *line, t_minish *mini, t_history *history)
 	t_cmd_ctx	ctx;
 
 	ctx.line = line;
-	ctx.line_copy = strdup(line);
+	ctx.line_copy = ft_strdup(line);
 	if (!ctx.line_copy)
 	{
 		mini->ret_value = 1;

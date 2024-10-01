@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 19:29:00 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 21:03:15 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:12:30 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*reemplazar_comillas(const char *input)
 	bool	in_single_quote;
 	t_iandj	iandj;
 
-	len = strlen(input);
+	len = ft_strlen(input);
 	res = (char *)malloc((len + 1) * sizeof(char));
 	iandj.i = 0;
 	iandj.j = 0;
@@ -60,17 +60,17 @@ char	*more_checks(const char *input)
 	int		len;
 	char	*res;
 
-	len = strlen(input);
+	len = ft_strlen(input);
 	if (len >= 2 && input[0] == '\"' && input[len - 1] == '\"'
 		&& es_una_palabra(input, len))
 	{
 		res = (char *)malloc((len - 1) * sizeof(char));
-		strncpy(res, input + 1, len - 2);
+		ft_strncpy(res, input + 1, len - 2);
 		res[len - 2] = '\0';
 		return (res);
 	}
 	res = (char *)malloc((len + 1) * sizeof(char));
-	strcpy(res, input);
+	ft_strcpy(res, input);
 	return (res);
 }
 

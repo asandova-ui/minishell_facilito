@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:48:35 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 10:45:34 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:20:12 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	process_token(t_parse_data *data, t_redirection *red)
 		|| ft_strcmp(data->token, ">>") == 0 || ft_strcmp(data->token,
 			"<<") == 0)
 	{
-		data->file = strtok_r(NULL, " \t", &data->rest);
+		data->file = ft_strtok_r(NULL, " \t", &data->rest);
 		if (data->file)
 			handle_redirection(data->token, data->file, red);
 	}
@@ -74,11 +74,11 @@ char	**parse_command(char *cmd, t_redirection *red)
 	data.token = 0;
 	data.rest = cmd;
 	data.file = NULL;
-	data.token = strtok_r(data.rest, " \t", &data.rest);
+	data.token = ft_strtok_r(data.rest, " \t", &data.rest);
 	while (data.token)
 	{
 		process_token(&data, red);
-		data.token = strtok_r(NULL, " \t", &data.rest);
+		data.token = ft_strtok_r(NULL, " \t", &data.rest);
 	}
 	if (data.args)
 		data.args[data.arg_count] = NULL;

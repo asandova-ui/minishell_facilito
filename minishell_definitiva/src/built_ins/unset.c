@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:37:53 by alonso            #+#    #+#             */
-/*   Updated: 2024/10/01 01:47:29 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:50:18 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_unset(char *args, t_minish *mini)
 	int		ret_value;
 
 	ret_value = 0;
-	arg = strtok(args, " \n");
+	arg = ft_strtok(args, " \n");
 	while (arg != NULL)
 	{
 		if (is_valid_export_env(arg))
@@ -30,10 +30,10 @@ int	ft_unset(char *args, t_minish *mini)
 		}
 		else
 		{
-			fprintf(stderr, "unset: %s: not a valid identifier\n", arg);
+			ft_printf("unset: %s: not a valid identifier\n", arg);
 			ret_value = 0;
 		}
-		arg = strtok(NULL, " \n");
+		arg = ft_strtok(NULL, " \n");
 	}
 	return (ret_value);
 }

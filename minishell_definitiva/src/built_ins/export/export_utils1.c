@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 00:45:20 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/24 10:00:47 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:43:16 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	print_export_sorted_envp(t_minish *mini)
 	i = 0;
 	while (i < state.env_count)
 	{
-		printf("declare -x %s\n", state.sorted_envp[i]);
+		ft_printf("declare -x %s\n", state.sorted_envp[i]);
 		i++;
 	}
 	free(state.sorted_envp);

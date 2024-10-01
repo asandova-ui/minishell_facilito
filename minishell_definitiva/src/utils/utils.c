@@ -6,13 +6,34 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 12:12:06 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/24 09:43:38 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:20:34 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../printf/includes/ft_printf.h"
 #include "../../printf/libft/libft.h"
+
+size_t	ft_strcspn(const char *str, const char *reject)
+{
+	const char	*s = str;
+	const char	*r;
+
+	while (*s != '\0')
+	{
+		r = reject;
+		while (*r != '\0')
+		{
+			if (*s == *r)
+			{
+				return (s - str);
+			}
+			r++;
+		}
+		s++;
+	}
+	return (s - str);
+}
 
 char	*ft_strjoin_3args(char const *s1, char connector, char const *s2)
 {

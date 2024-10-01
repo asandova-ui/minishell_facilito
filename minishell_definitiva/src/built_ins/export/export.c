@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 13:36:23 by alonso            #+#    #+#             */
-/*   Updated: 2024/10/01 01:58:13 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:49:33 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	process_export_arg(t_exportState *state, char *arg, char *name)
 	char	*equal_sign;
 	char	*value;
 
-	equal_sign = strchr(arg, '=');
+	equal_sign = ft_strchr(arg, '=');
 	if (equal_sign != NULL)
 	{
 		*equal_sign = '\0';
@@ -48,13 +48,13 @@ void	process_export_arg(t_exportState *state, char *arg, char *name)
 		}
 		else
 		{
-			fprintf(stderr, "export: %s: not a valid identifier\n", name);
+			ft_printf("export: %s: not a valid identifier\n", name);
 			state->ret_value = 1;
 		}
 	}
 	else if (!is_valid_export_env(arg))
 	{
-		fprintf(stderr, "export: %s: not a valid identifier\n", arg);
+		ft_printf("export: %s: not a valid identifier\n", arg);
 		state->ret_value = 1;
 	}
 }
@@ -69,11 +69,11 @@ int	ft_export(char *args, t_minish *mini)
 	init_export_state(&state, args, mini);
 	if (handle_export_empty_args(&state) != -1)
 		return (state.ret_value);
-	arg = strtok(args, " \n");
+	arg = ft_strtok(args, " \n");
 	while (arg != NULL)
 	{
 		process_export_arg(&state, arg, name);
-		arg = strtok(NULL, " \n");
+		arg = ft_strtok(NULL, " \n");
 	}
 	return (state.ret_value);
 }

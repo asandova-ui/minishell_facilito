@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 02:29:18 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/24 03:25:17 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:35:44 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,22 +74,22 @@ char	*redirect_echo(char *line)
 	const char	*bin_echo = "/bin/echo";
 
 	new_line = NULL;
-	echo_position = strstr(line, "echo");
+	echo_position = ft_strstr(line, "echo");
 	if (echo_position == NULL)
 		return (NULL);
 	if (has_redirection(line))
 	{
-		len = strlen(line) + strlen(bin_echo) - strlen("echo") + 1;
+		len = ft_strlen(line) + ft_strlen(bin_echo) - ft_strlen("echo") + 1;
 		new_line = (char *)malloc(len);
 		if (new_line == NULL)
 		{
 			perror("malloc");
 			return (NULL);
 		}
-		strncpy(new_line, line, echo_position - line);
+		ft_strncpy(new_line, line, echo_position - line);
 		new_line[echo_position - line] = '\0';
-		strcat(new_line, bin_echo);
-		strcat(new_line, echo_position + strlen("echo"));
+		ft_strcat(new_line, bin_echo);
+		ft_strcat(new_line, echo_position + ft_strlen("echo"));
 		return (new_line);
 	}
 	return (NULL);

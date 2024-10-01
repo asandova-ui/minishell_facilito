@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jamorale <jamorale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 01:08:17 by jamorale          #+#    #+#             */
-/*   Updated: 2024/09/24 01:13:20 by jamorale         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:48:14 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	swap(void *a, void *b, size_t size)
 	tmp = malloc(size);
 	if (!tmp)
 		return ;
-	memcpy(tmp, a, size);
-	memcpy(a, b, size);
-	memcpy(b, tmp, size);
+	ft_memcpy(tmp, a, size);
+	ft_memcpy(a, b, size);
+	ft_memcpy(b, tmp, size);
 	free(tmp);
 }
 

@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:41:11 by asandova          #+#    #+#             */
-/*   Updated: 2024/09/30 21:03:33 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:34:50 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,4 +347,15 @@ char						*reemplazar_comillas(const char *input);
 bool						es_caracter_especial(char c);
 void						procesar_comilla(const char *input, char *res,
 								t_iandj *iandj, bool *in_single_quote);
+char						*ft_strtok(char *str, const char *delim);
+char						*ft_strcpy(char *dest, const char *src);
+char						*ft_strtok_r(char *str, const char *delim,
+								char **saveptr);
+size_t						ft_strcspn(const char *str, const char *reject);
+char						*ft_strpbrk(const char *str, const char *accept);
+size_t						ft_strspn(const char *str, const char *accept);
+char						*ft_strstr(const char *haystack, const char *needle);
+void						ft_fprintf(const char *str);
+char						*ft_strcat(char *dest, const char *src);
+
 #endif

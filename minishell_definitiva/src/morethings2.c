@@ -6,11 +6,16 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:49:34 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 20:58:07 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:32:19 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	ft_fprintf(const char *str)
+{
+	write(2, str, strlen(str));
+}
 
 bool	es_caracter_especial(char c)
 {

@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 09:56:29 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 21:34:50 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:20:18 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	write_heredoc_content(int pipefd[2], char *heredoc_delim,
 		read = getline(&line, &len, stdin);
 		if (read == -1)
 			break ;
-		line[strcspn(line, "\n")] = 0;
+		line[ft_strcspn(line, "\n")] = 0;
 		if (ft_strcmp(line, heredoc_delim) == 0)
 			break ;
 		write(pipefd[1], line, strlen(line));

@@ -6,7 +6,7 @@
 /*   By: alonso <alonso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 10:49:10 by alonso            #+#    #+#             */
-/*   Updated: 2024/09/30 10:45:34 by alonso           ###   ########.fr       */
+/*   Updated: 2024/10/01 09:36:17 by alonso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	execute_from_path(char **args, t_minish *mini)
 
 	if (!mini->path)
 	{
-		fprintf(stderr, "PATH is not set\n");
+		printf("PATH is not set\n");
 		return (0);
 	}
 	i = 0;
@@ -49,7 +49,7 @@ void	execute_from_absolute_path(char **args, t_minish *mini)
 	}
 	else
 	{
-		fprintf(stderr, "Command not found or not executable: %s\n", args[0]);
+		printf("Command not found or not executable: %s\n", args[0]);
 		exit(127);
 	}
 }
@@ -60,13 +60,13 @@ void	execute_from_path_or_exit(char **args, t_minish *mini)
 	{
 		if (execute_from_path(args, mini) == 0)
 		{
-			fprintf(stderr, "Command not found: %s\n", args[0]);
+			printf("Command not found: %s\n", args[0]);
 			exit(127);
 		}
 	}
 	else
 	{
-		fprintf(stderr, "PATH is not set\n");
+		printf("PATH is not set\n");
 		exit(127);
 	}
 }
