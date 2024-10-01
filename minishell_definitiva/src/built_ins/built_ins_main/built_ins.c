@@ -18,7 +18,7 @@ void	handle_echo(t_cmd_ctx *ctx, t_minish *mini)
 {
 	char	*nueva_linea;
 
-	ctx->args = strtok(NULL, "\n");
+	ctx->args = ft_strtok(NULL, "\n");
 	if (ctx->args == NULL)
 	{
 		write(1, "\n", 1);
@@ -46,7 +46,7 @@ void	handle_cd(t_cmd_ctx *ctx, t_minish *mini)
 {
 	char	*home;
 
-	ctx->args = strtok(NULL, "\n");
+	ctx->args = ft_strtok(NULL, "\n");
 	if (ctx->args == NULL)
 	{
 		home = getenv("HOME");
@@ -63,7 +63,7 @@ void	handle_export(t_cmd_ctx *ctx, t_minish *mini)
 {
 	int	error;
 
-	ctx->args = strtok(NULL, "\n");
+	ctx->args = ft_strtok(NULL, "\n");
 	if (ctx->args == NULL)
 	{
 		mini->ret_value = ft_export(NULL, mini);
@@ -101,7 +101,7 @@ void	dispatch_command(t_cmd_ctx *ctx, t_minish *mini, t_history *history)
 	else if (ft_strcmp(ctx->command, "env") == 0)
 		mini->ret_value = ft_env(mini);
 	else if (ft_strcmp(ctx->command, "exit") == 0)
-		ft_exit(strtok(NULL, "\n"), mini);
+		ft_exit(ft_strtok(NULL, "\n"), mini);
 	else if (ft_strcmp(ctx->command, "history") == 0)
 		show_history(history, mini);
 	else
@@ -120,7 +120,7 @@ void	built_ins(char *line, t_minish *mini, t_history *history)
 		mini->exec = 1;
 		return ;
 	}
-	ctx.command = strtok(ctx.line, " \n");
+	ctx.command = ft_strtok(ctx.line, " \n");
 	if (ctx.command == NULL)
 	{
 		mini->ret_value = 0;
