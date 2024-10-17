@@ -1,0 +1,8 @@
+NO textures3/test/north.xpm
+SO textures3/test/south.xpm
+WE textures3/test/west.xpm
+EA textures3/test/east.xpm
+
+F 20,20,20
+C 200,200,200
+
