@@ -1,0 +1,67 @@
+version: "3.8"
+name: inception
+services:
+  nginx:
+    build: ./requirements/nginx
+    image: nginx
+    container_name: nginx
+    init: true
+    restart: always
+    depends_on:
+      - wordpress
+    ports:
+      - 443:443
+    networks:
+      - frontend
+    extra_hosts:
+      - "$DOMAIN_NAME:127.0.0.1"
+    volumes:
+      - wordpress_data:/var/www/html
+  wordpress:
+    build: ./requirements/wordpress
+    image: wordpress
+    container_name: wordpress
+    init: true
+    restart: always
+    depends_on:
+      - mariadb
+    networks:
+      - frontend
+      - backend
+    extra_hosts:
+      - "$DOMAIN_NAME:127.0.0.1"
+    volumes:
+      - wordpress_data:/var/www/html
+    env_file:
+      - .env
+  mariadb:
+    build: ./requirements/mariadb
+    image: mariadb
+    container_name: mariadb
+    init: true
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    env_file:
+      - .env
+networks:
+  frontend:
+  backend:
+
+volumes:
+  mariadb_data:
+    driver: local
+    name: mariadb_data
+    driver_opts:
+      type: volume
+      device: /home/jamorale/data/db
+      o: bind
+  wordpress_data:
+    driver: local
+    name: wordpress_data
+    driver_opts:
+      type: volume
+      device: /home/jamorale/data/website-files
+      o: bind
