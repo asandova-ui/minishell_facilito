@@ -11,6 +11,7 @@
 #include <sstream>
 #include <algorithm>
 #include <fcntl.h> 
+#include <numeric>
 
 Server::Server(int port, const std::string& password) : 
     _port(port), _password(password), _serverSocket(-1) {
@@ -368,12 +369,12 @@ void Server::handlePrivmsg(Client* client, const std::vector<std::string>& args)
             client->sendMessage(":server 442 " + client->getNickname() + " " + target + " :You're not on that channel");
             return;
         }
-        channel->broadcast(":" + target + " " + client->getNickname() + " -> " + message, client);
+        channel->broadcast(":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + " PRIVMSG " + target + " :" + message);
     } else {
         // Mensaje privado a usuario
         Client* targetClient = findClientByNickname(target);
         if (!targetClient) {
-            client->sendMessage(":No existe el nickname " + target);
+            client->sendMessage(":No existe el usuario " + target);
             return;
         }
         targetClient->sendMessage(":Mensaje privado de " + client->getNickname() + " -> " + message);
@@ -388,7 +389,7 @@ void Server::handleKick(Client* client, const std::vector<std::string>& args) {
 
     std::string channelName = args[0];
     std::string targetNick = args[1];
-    std::string reason = args.size() > 2 ? args[2] : "No reason given";
+    std::string reason = args.size() > 2 ? std::accumulate(args.begin() + 2, args.end(), std::string(" ")) : "No reason given";
 
     Channel* channel = getChannel(channelName);
     if (!channel) {

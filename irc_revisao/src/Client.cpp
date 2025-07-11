@@ -82,8 +82,6 @@ void Client::sendMessage(const std::string& message) const {
 void Client::sendWelcomeMessage() {
     std::string welcome = ":Welcome to the IRC server " + getNickname();
     sendMessage(welcome);
-    
-    sendMessage(":" + getNickname() + ": This server was created now");
 }
 
 void Client::appendToBuffer(const std::string& data) {
