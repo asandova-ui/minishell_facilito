@@ -408,7 +408,7 @@ void Server::handlePrivmsg(Client* client, const std::vector<std::string>& args)
         
         // Formato CORRECTO para HexChat
         std::string privmsg = ":" + client->getNickname() + "!" + client->getUsername() + "@server PRIVMSG " + target + " :" + message;
-        channel->broadcast(privmsg);
+        channel->broadcast(privmsg, client);
     } else {
         // Mensaje privado
         Client* targetClient = findClientByNickname(target);
