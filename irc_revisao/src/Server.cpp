@@ -106,8 +106,7 @@ void Server::acceptNewClient() {
     }
     
     // Configurar el socket como no bloqueante
-    int flags = fcntl(clientFd, F_GETFL, 0);
-    if (fcntl(clientFd, F_SETFL, flags | O_NONBLOCK) == -1) {
+    if (fcntl(clientFd, F_SETFL, O_NONBLOCK) == -1) {
         std::cerr << "Error setting non-blocking mode for client " << clientFd << std::endl;
         close(clientFd);
         return;
@@ -144,20 +143,24 @@ void Server::handleClientData(int clientFd) {
     ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer) - 1, 0);
     
     if (bytesRead <= 0) {
-        if (bytesRead == 0) {
+        if (bytesRead == 0)
             std::cout << "Client " << clientFd << " disconnected" << std::endl;
-        } else {
+        else
             std::cerr << "Error reading from client " << clientFd << std::endl;
-        }
         disconnectClient(clientFd, "Connection closed");
         return;
     }
-    
+
     buffer[bytesRead] = '\0';
-    Client* client = _clients[clientFd];
-    client->appendToBuffer(buffer);
     
-    while (client->hasCompleteCommand()) {
+    Client* client = _clients[clientFd];
+    if (!client) return;
+
+    client->appendToBuffer(buffer);
+
+    while (_clients.count(clientFd)) {
+        if (!client->hasCompleteCommand())
+            break;
         std::string command = client->getNextCommand();
         processCommand(client, command);
     }
@@ -276,6 +279,8 @@ void Server::disconnectClient(int clientFd, const std::string& reason) {
     delete client;
     
     std::cout << "Client " << clientFd << " disconnected: " << reason << std::endl;
+
+    exit(0);
 }
 
 void Server::handleUser(Client* client, const std::vector<std::string>& args) {
@@ -295,58 +300,75 @@ void Server::handleUser(Client* client, const std::vector<std::string>& args) {
 
 void Server::handleJoin(Client* client, const std::vector<std::string>& args) {
     if (!client->isAuthenticated() || client->getNickname().empty() || client->getUsername().empty()) {
-        client->sendMessage(":server 451 :You have not registered");
+        client->sendMessage(":server 451 " + client->getNickname() + " :You have not registered");
         return;
     }
 
     if (args.empty()) {
-        client->sendMessage(":server 461 JOIN :Not enough parameters");
+        client->sendMessage(":server 461 " + client->getNickname() + " JOIN :Not enough parameters");
         return;
     }
-    
+
     std::string channelName = args[0];
     if (channelName[0] != '#') {
         channelName = "#" + channelName;
     }
-    
+
     Channel* channel = getChannel(channelName);
+    bool isNewChannel = false;
+
     if (!channel) {
         channel = createChannel(channelName, client);
-        std::string joinMsg = ":" + client->getNickname() + "!" + client->getUsername() + "@localhost JOIN " + channelName;
-        client->sendMessage(joinMsg);
-        channel->sendNamesList(client);
-        return;
+        isNewChannel = true;
     }
-    
+
+    // Si ya es miembro, ignorar
     if (channel->isMember(client)) {
         return;
     }
-    
-    // Verificación de modos de canal
+
+    // Verificaciones de modos del canal
     if (channel->isInviteOnly() && !channel->isInvited(client->getNickname())) {
         client->sendMessage(":server 473 " + client->getNickname() + " " + channelName + " :Cannot join channel (+i)");
         return;
     }
-    
+
     if (!channel->getKey().empty() && (args.size() < 2 || args[1] != channel->getKey())) {
         client->sendMessage(":server 475 " + client->getNickname() + " " + channelName + " :Cannot join channel (+k)");
         return;
     }
-    
+
     if (channel->isFull()) {
         client->sendMessage(":server 471 " + client->getNickname() + " " + channelName + " :Cannot join channel (+l)");
         return;
     }
-    
+
+    // Añadir al canal
     channel->addMember(client);
     client->joinChannel(channel);
-    std::string joinMsg = ":" + client->getNickname() + "!" + client->getUsername() + "@localhost JOIN " + channelName;
+
+    // Mensaje JOIN visible para todos en el canal (incluido el nuevo)
+    std::string prefix = ":" + client->getNickname() + "!" + client->getUsername() + "@localhost";
+    std::string joinMsg = prefix + " JOIN :" + channelName;
     channel->broadcast(joinMsg);
-    channel->sendNamesList(client);
-    
+
+    // TOPIC si existe
     if (!channel->getTopic().empty()) {
         client->sendMessage(":server 332 " + client->getNickname() + " " + channelName + " :" + channel->getTopic());
+
+        // Si implementas setTopicInfo()
+        std::ostringstream oss;
+        oss << channel->getTopicTimestamp();
+        client->sendMessage(":server 333 " + client->getNickname() + " " +
+            channelName + " " + channel->getTopicSetter() + " " + oss.str());
     }
+
+    // RPL_NAMREPLY (353) con lista de usuarios
+    std::string userList = channel->getFormattedUserList(); // ejemplo: "@Luis +Pedro Juan"
+    client->sendMessage(":server 353 " + client->getNickname() + " = " + channelName + " :" + userList);
+
+    // RPL_ENDOFNAMES (366)
+    client->sendMessage(":server 366 " + client->getNickname() + " " + channelName + " :End of /NAMES list.");
 }
 
 void Server::handlePrivmsg(Client* client, const std::vector<std::string>& args) {

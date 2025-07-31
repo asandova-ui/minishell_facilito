@@ -3,7 +3,8 @@
 
 #include <string>
 #include <vector>
-#include <sstream> 
+#include <sstream>
+#include <set>
 
 class Channel;
 

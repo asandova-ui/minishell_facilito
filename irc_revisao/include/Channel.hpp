@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <sstream> 
+#include <sstream>
+#include <algorithm>
+
 
 class Client;
 
@@ -12,6 +14,8 @@ class Channel {
 private:
     std::string _name;
     std::string _topic;
+    std::string _topicSetter;
+    time_t _topicTime;
     std::string _key;
     std::vector<Client*> _members;
     std::vector<Client*> _operators;
@@ -60,6 +64,11 @@ public:
     bool checkKey(const std::string& key) const;
     bool isFull() const;
     
+
+    std::string getTopicSetter() const;
+    time_t getTopicTimestamp() const;
+    void setTopic(const std::string& topic, const std::string& setter);
+    std::string getFormattedUserList() const;
     
     // Messaging
     void broadcast(const std::string& message, Client* sender = NULL) const;

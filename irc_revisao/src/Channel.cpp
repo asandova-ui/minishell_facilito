@@ -147,3 +147,30 @@ void Channel::sendNamesList(Client* client) const {
 const std::string& Channel::getTopic() const {
     return _topic;
 }
+
+std::string Channel::getTopicSetter() const {
+    return _topicSetter;
+}
+
+time_t Channel::getTopicTimestamp() const {
+    return _topicTime;
+}
+
+void Channel::setTopic(const std::string& topic, const std::string& setter) {
+    _topic = topic;
+    _topicSetter = setter;
+    _topicTime = time(NULL);
+}
+
+std::string Channel::getFormattedUserList() const {
+    std::string list;
+    for (std::vector<Client*>::const_iterator it = _members.begin(); it != _members.end(); ++it) {
+        Client* member = *it;
+        if (std::find(_operators.begin(), _operators.end(), member) != _operators.end())
+            list += "@";
+        list += member->getNickname() + " ";
+    }
+    if (!list.empty())
+        list.erase(list.end() - 1); // eliminar espacio final
+    return list;
+}

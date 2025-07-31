@@ -28,7 +28,7 @@ USO MENSAJES:
 
 2.- El otro usuario se une a ese canal usando el mismo comando
 
-3.- Cualquiera de los usuarios usa "PRIVMSG #nombrecanal hola" 
+3.- Cualquiera de los usuarios usa "PRIVMSG #nombrecanal :hola" 
 
 4.- Ambos usuarios ven el mensaje en el canal
 
@@ -38,7 +38,7 @@ MENSAJE PRIVADO A UN USUARIO:
 
 1.- No tienen por que estar en el mismo canal
 
-2.- "PRIVMSG nombreusuario mensaje"
+2.- "PRIVMSG nombreusuario :mensaje"
 
 ----------------------------------------------------
 
@@ -74,7 +74,7 @@ CANAL CON CONTRASEÑA:
 
 EXPULSAR USUARIO:
 
-1- El operador puede expulsar usuarios con el comando "KICK #canal nombreusuario"
+1- El operador puede expulsar usuarios con el comando "KICK #canal nombreusuario :razon"
 
 ----------------------------------------------------
 
@@ -89,7 +89,7 @@ que solo admite una persona (en este caso el propio operador)
 
 ESTABLECER UN TEMA DE CANAL:
 
-1.- Con el comando "TOPIC #canal nombretema" se establece el tema del canal
+1.- Con el comando "TOPIC #canal :nombretema" se establece el tema del canal
 
 2.- En principio cualquier usuario puede establecer o cambiar el tema del canal.
 
